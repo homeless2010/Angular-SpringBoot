@@ -5,6 +5,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * CORS支持
+ * 
+ * @author homeless2010
+ */
 @Configuration
 public class CustomCorsConfiguration {
 	@Bean
@@ -13,6 +18,9 @@ public class CustomCorsConfiguration {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/_web/_apps/*/api/**");
+				// registry.addMapping("/_web/_apps/*/api/**").allowedMethods("GET",
+				// "POST", "DELETE", "PUT", "OPTIONS");
+				// registry.addMapping("/_web/_apps/*/api/**").allowedOrigins("http://localhost:8080");
 			}
 		};
 	}
