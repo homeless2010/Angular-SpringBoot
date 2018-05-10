@@ -27,13 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "/web/commons")
 public class FileController {
 	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
-	@Value(value="${piedPiper.uploadFilePath}")
+	@Value(value = "${piedPiper.uploadFilePath}")
 	private String filePath;
 
 	@RequestMapping(value = "file", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String,Object> upload(@RequestParam("file") MultipartFile file) {
-		Map<String,Object> map = new HashMap<String, Object>();
+	public Map<String, Object> upload(@RequestParam("file") MultipartFile file) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("type", "success");
 		if (file.isEmpty()) {
 			map.put("errorMsg", "文件为空!");
