@@ -17,7 +17,7 @@ public class CustomCorsConfiguration {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/_web/_apps/*/api/**");
+				registry.addMapping("/web/*/**").allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS");
 				// registry.addMapping("/_web/_apps/*/api/**").allowedMethods("GET",
 				// "POST", "DELETE", "PUT", "OPTIONS");
 				// registry.addMapping("/_web/_apps/*/api/**").allowedOrigins("http://localhost:8080");

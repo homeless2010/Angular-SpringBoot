@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/_web/_apps/system/api")
+@RequestMapping("/web/system")
 public class LoginController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
