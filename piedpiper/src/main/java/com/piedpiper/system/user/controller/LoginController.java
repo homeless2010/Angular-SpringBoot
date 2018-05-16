@@ -6,24 +6,19 @@ import java.util.Map;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/web/system")
+import com.piedpiper.system.api.shiro.token.PiedPiperUsernamePasswordToken;
+
+@Controller
+@RequestMapping("/web/user")
 public class LoginController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-//	@RequestMapping(method = RequestMethod.PUT)
-//	public String login() {
-//		logger.info("logger!!!!!!!!!!!!");
-//		// return "hello world!";
-//		return "hello world!";
-//	}
-	
 	//跳转到登录表单页面
 	@RequestMapping(value="login")
 	public String login() {
@@ -42,7 +37,7 @@ public class LoginController {
 	    Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
 	    try {
 	        
-	        ShiroToken token = new ShiroToken(username, password);
+	    	PiedPiperUsernamePasswordToken token = new PiedPiperUsernamePasswordToken(username, password);
 	        SecurityUtils.getSubject().login(token);
 	        resultMap.put("status", 200);
 	        resultMap.put("message", "登录成功");
