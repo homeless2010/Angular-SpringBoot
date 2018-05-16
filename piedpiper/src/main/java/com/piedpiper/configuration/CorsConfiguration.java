@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author homeless2010
  */
 @Configuration
-public class CustomCorsConfiguration {
+public class CorsConfiguration {
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {

@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.piedpiper.system.controller.LoginController;
+import com.piedpiper.system.user.controller.LoginController;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
