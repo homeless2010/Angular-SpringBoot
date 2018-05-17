@@ -12,7 +12,7 @@ public class PiedpiperApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(PiedpiperApplication.class);
 	}
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(PiedpiperApplication.class, args);
 	}
