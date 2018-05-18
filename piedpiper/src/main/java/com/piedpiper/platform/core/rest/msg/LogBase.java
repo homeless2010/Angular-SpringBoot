@@ -1,4 +1,4 @@
-package com.piedpiper.system.core.rest.msg;
+package com.piedpiper.platform.core.rest.msg;
 
 import java.io.Serializable;
 

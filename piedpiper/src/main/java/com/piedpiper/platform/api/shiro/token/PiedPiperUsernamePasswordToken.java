@@ -1,7 +1,7 @@
-package com.piedpiper.system.api.shiro.token;
+package com.piedpiper.platform.api.shiro.token;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
-import com.piedpiper.system.core.rest.msg.LogBase;
+import com.piedpiper.platform.core.rest.msg.LogBase;
 
 public class PiedPiperUsernamePasswordToken extends UsernamePasswordToken {
 	private static final long serialVersionUID = 7886357106366350864L;
