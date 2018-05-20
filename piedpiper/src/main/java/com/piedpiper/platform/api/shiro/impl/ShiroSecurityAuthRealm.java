@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.piedpiper.platform.user.dto.User;
+import com.piedpiper.platform.api.sysshirolog.token.AvicitUsernamePasswordToken;
+import com.piedpiper.platform.api.sysuser.SysUserAPI;
 
 @Service
 public class ShiroSecurityAuthRealm extends AuthorizingRealm {

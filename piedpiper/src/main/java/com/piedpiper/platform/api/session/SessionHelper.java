@@ -1,17 +1,18 @@
 package com.piedpiper.platform.api.session;
-import avicit.platform6.api.session.dto.SecurityUser;
-import avicit.platform6.api.sysuser.dto.SysDept;
-import avicit.platform6.api.sysuser.dto.SysDeptTl;
-import avicit.platform6.core.properties.PlatformProperties;
-import avicit.platform6.core.rest.client.RestClientConfig;
-import avicit.platform6.core.shiroSecurity.contextThread.ContextCommonHolder;
+
 import java.util.Locale;
-import javax.servlet.ServletContext;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import com.piedpiper.platform.api.session.dto.SecurityUser;
+import com.piedpiper.platform.api.sysuser.dto.SysDept;
+import com.piedpiper.platform.api.sysuser.dto.SysDeptTl;
 import com.piedpiper.platform.api.sysuser.dto.SysUser;
+import com.piedpiper.platform.core.properties.PlatformProperties;
+import com.piedpiper.platform.core.rest.client.RestClientConfig;
+import com.piedpiper.platform.core.shiroSecurity.contextThread.ContextCommonHolder;
 
 public class SessionHelper {
 	public static String SESSION_CURRENT_DEPT = "CURRENT_DEPT";
@@ -53,7 +54,7 @@ public class SessionHelper {
 	}
 
 	public static String getCurrentDeptName(HttpServletRequest request) {
-		return ((String) request.getSession().getAttribute("CURRENT_DEPT_TL"));
+		return (String) request.getSession().getAttribute("CURRENT_DEPT_TL");
 	}
 
 	public static String getApplicationId() {
@@ -134,7 +135,7 @@ public class SessionHelper {
 	}
 
 	public static Locale getLocaleByUser(HttpServletRequest request) {
-		return ((Locale) request.getSession().getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME));
+		return (Locale) request.getSession().getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
 	}
 
 	public static SysUser getLoginSysUser(HttpServletRequest request) {

@@ -1,4 +1,5 @@
 package com.piedpiper.platform.core.properties;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,43 @@ public class PlatformConstant {
 	public static final String PSD_TMPLET_KEY_HOWLONGMODIFY = "howLongModify";
 	public static final String PSD_TMPLET_KEY_MODIFYDEFAULT = "modifyDefault";
 	public static final String PSD_TMPLET_KEY_FIRSTLOGIN = "firstLogin";
+
+	public static enum OpType {
+		login, insert, delete, update, select, logout;
+
+		private OpType() {
+		}
+	}
+
+	public static enum OpResult {
+		success, failure;
+
+		private OpResult() {
+		}
+	}
+
+	public static enum LogType {
+		module_operate, system_manage, safety_manage, safety_audit;
+
+		private LogType() {
+		}
+	}
+
+	public static enum FixedRole {
+		general_user(4), platform_manager(0), system_manager(1), safety_manager(3), safety_auditor(2);
+		protected final String code;
+
+		private String[] codes = PlatformProperties.getProperty("platform.unableModify.system.sysRole").split(",");
+
+		private FixedRole(int index) {
+			this.code = this.codes[index];
+		}
+
+		public String getCode() {
+			return code;
+		};
+	}
+
 	public static final String PSD_TMPLET_KEY_DISTINCTBEFORE = "distinctBefore";
 	public static final String PSD_TMPLET_KEY_DIFFERENCE = "difference";
 	public static final String PSD_TMPLET_KEY_MAXLENGTH = "maxlength";
@@ -45,43 +83,36 @@ public class PlatformConstant {
 	public static final String PSD_TMPLET_KEY_INTENSITY = "intensity";
 	public static final String MENU_DISPLAY_TAB_ICON = "PLATFORM_V6_DISPLAY_TAB_ICON";
 	public static final String MENU_DISPLAY_ICON_TIPS = "PLATFORM_V6_DISPLAY_ICON_TIPS";
+
+	public static enum RecordType {
+		system, application;
+
+		private RecordType() {
+		}
+	}
+
 	public static final String MENU_DISPLAY_DIV_ICON = "PLATFORM_V6_DISPLAY_DIV_ICON";
 	public static final String MENU_PMO_FIRST_TITLE_ICON = "PLATFORM_V6_PMO_FIRST_TITLE_ICON";
 	public static final String MENU_PMO_SECONDE_TITLE_ICON = "PLATFORM_V6_PMO_SECONDE_TITLE_ICON";
+
+	public static enum UseageModifier {
+		publicLevel, privateLevel;
+
+		private UseageModifier() {
+		}
+	}
+
 	public static final String MENU_DEFAULT_ICON_IMAGE = "PLATFORM_V6_DEFAULT_ICON_IMAGE";
 	public static final String MENU_DISPLAY_ICON_DESC = "PLATFORM_V6_DISPLAY_ICON_DESC";
 	public static final String MENU_NORMAL = "1";
 	public static final String MENU_PORTAL = "2";
 
-	public static abstract enum ExtendPermissType {
+/*	public static abstract enum ExtendPermissType {
 		ex_report;
 
+		private ExtendPermissType() {
+		}
+
 		public abstract String getAppid();
-	}
-	public static enum UseageModifier {
-		publicLevel, privateLevel;
-	}
-	public static enum RecordType {
-		system, application;
-	}
-	public static abstract enum FixedRole {
-		general_user, platform_manager, system_manager, safety_manager, safety_auditor;
-
-		protected final String code;
-		private String[] codes = PlatformProperties.getProperty("platform.unableModify.system.sysRole").split(",");
-
-		public abstract String getCode();
-	}
-
-	public static enum LogType {
-		module_operate, system_manage, safety_manage, safety_audit;
-	}
-
-	public static enum OpResult {
-		success, failure;
-	}
-
-	public static enum OpType {
-		login, insert, delete, update, select, logout;
-	}
+	}*/
 }

@@ -7,18 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.piedpiper.platform.core.domain.BeanDTO;
+import com.piedpiper.platform.core.properties.PlatformConstant;
+import com.piedpiper.platform.core.redisCacheManager.BaseCacheBean;
+import com.piedpiper.platform.core.redisCacheManager.BaseCacheBlank;
 
-/**
- * 
- * @author homeless2010
- *
- */
 public class SysUser extends BeanDTO implements BaseCacheBean, Comparable<SysUser> {
-	public static final String USER = "PLATFORM_USER";
-	public static final String USERLOGINNAME = "PLATFORM_USERLOGINNAME";
-	public static final String USERUNITCODE = "PLATFORM_USERUNITCODE";
-	public static final String USERNO = "PLATFORM_USERNO";
-	public static final String USEREMAIL = "PLATFORM_USEREMAIL";
+	public static final String USER = "PLATFORM6_USER";
+	public static final String USERLOGINNAME = "PLATFORM6_USERLOGINNAME";
+	public static final String USERUNITCODE = "PLATFORM6_USERUNITCODE";
+	public static final String USERNO = "PLATFORM6_USERNO";
+	public static final String USEREMAIL = "PLATFORM6_USEREMAIL";
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private String name;
@@ -45,10 +44,8 @@ public class SysUser extends BeanDTO implements BaseCacheBean, Comparable<SysUse
 	private String homeAddress;
 	private String homeZip;
 	private String homeTel;
-
 	@JsonIgnore
 	private Blob photo;
-
 	@JsonIgnore
 	private Blob sign;
 	private BigDecimal orderBy;
@@ -624,19 +621,19 @@ public class SysUser extends BeanDTO implements BaseCacheBean, Comparable<SysUse
 	}
 
 	public Map<String, ?> returnCacheKey() {
-		Map map = new HashMap();
-		map.put("PLATFORM_USER", this.id);
-		map.put("PLATFORM_USERLOGINNAME", this.loginName);
-		map.put("PLATFORM_USERUNITCODE", this.unitCode);
-		map.put("PLATFORM_USERNO", new BaseCacheBlank(this.no));
-		if ((this.email != null) && (!(this.email.equals("")))) {
-			map.put("PLATFORM_USEREMAIL", this.email);
+		Map<String, Object> map = new HashMap();
+		map.put("PLATFORM6_USER", this.id);
+		map.put("PLATFORM6_USERLOGINNAME", this.loginName);
+		map.put("PLATFORM6_USERUNITCODE", this.unitCode);
+		map.put("PLATFORM6_USERNO", new BaseCacheBlank(this.no));
+		if ((this.email != null) && (!this.email.equals(""))) {
+			map.put("PLATFORM6_USEREMAIL", this.email);
 		}
 		return map;
 	}
 
 	public String prefix() {
-		return "PLATFORM_USER";
+		return "PLATFORM6_USER";
 	}
 
 	public String returnValidFlag() {

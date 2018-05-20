@@ -1,44 +1,45 @@
 package com.piedpiper.platform.api.shiro.util;
 
-import avicit.platform6.api.session.dto.SecurityUser;
-import avicit.platform6.api.sysmenu.dto.SysMenu;
-import avicit.platform6.api.sysprofile.SysProfileAPI;
-import avicit.platform6.api.sysresource.SysResourceAPI;
-import avicit.platform6.api.sysresource.dto.SysResource;
-import avicit.platform6.api.sysshirolog.context.ContextHolder;
-import avicit.platform6.api.sysuser.SysRoleAPI;
-import avicit.platform6.commons.utils.SerializeUtil;
-import avicit.platform6.commons.utils.ViewUtil;
-import avicit.platform6.core.properties.PlatformProperties;
-import avicit.platform6.core.redis.JedisSentinelPool;
-import avicit.platform6.core.redisCacheManager.BaseCacheManager;
-import avicit.platform6.core.rest.client.RestClientConfig;
-import avicit.platform6.core.shiroSecurity.cas.util.StringUtil;
-import avicit.platform6.core.shiroSecurity.passwordencoder.PasswordEncoder;
-import avicit.platform6.core.shiroSecurity.shiroCache.ShiroCacheManager;
-import avicit.platform6.core.spring.SpringFactory;
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.cache.Cache;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.AntPathMatcher;
 import org.apache.shiro.util.PatternMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Jedis;
 import org.springframework.util.StringUtils;
-import redis.clients.jedis.Jedis;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.piedpiper.platform.api.session.SessionHelper;
+import com.piedpiper.platform.api.session.dto.SecurityUser;
+import com.piedpiper.platform.api.sysmenu.dto.SysMenu;
+import com.piedpiper.platform.api.sysprofile.SysProfileAPI;
+import com.piedpiper.platform.api.sysresource.SysResourceAPI;
+import com.piedpiper.platform.api.sysresource.dto.SysResource;
+import com.piedpiper.platform.api.sysshirolog.context.ContextHolder;
+import com.piedpiper.platform.api.sysshirolog.utils.NotApplictionIdException;
+import com.piedpiper.platform.api.sysshirolog.utils.ReflectionSaltSource;
+import com.piedpiper.platform.api.sysuser.SysRoleAPI;
+import com.piedpiper.platform.commons.utils.SerializeUtil;
+import com.piedpiper.platform.commons.utils.ViewUtil;
+import com.piedpiper.platform.core.properties.PlatformProperties;
+import com.piedpiper.platform.core.redis.JedisSentinelPool;
+import com.piedpiper.platform.core.redisCacheManager.BaseCacheManager;
+import com.piedpiper.platform.core.rest.client.RestClientConfig;
+import com.piedpiper.platform.core.shiroSecurity.cas.util.StringUtil;
+import com.piedpiper.platform.core.shiroSecurity.passwordencoder.PasswordEncoder;
+import com.piedpiper.platform.core.shiroSecurity.shiroCache.ShiroCacheManager;
+import com.piedpiper.platform.core.spring.SpringFactory;
+
 import redis.clients.jedis.ShardedJedis;
 
 public class SecurityUtil {
@@ -239,7 +240,7 @@ public class SecurityUtil {
 		try {
 			ContextHolder.getRequest().getSession().setAttribute("SANYUANLOGIN_REDIRECT", simpleName);
 			ContextHolder.getResponse().sendRedirect(ViewUtil.getRequestPath(ContextHolder.getRequest())
-					+ "avicit/platform6/modules/system/sanyuanlogin/sanyuanlogin.jsp");
+					+ "com.piedpiper/modules/system/sanyuanlogin/sanyuanlogin.jsp");
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 		}
