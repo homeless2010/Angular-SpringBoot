@@ -163,7 +163,7 @@ public class SysUserDeptPositionAPImpl implements SysUserDeptPositionAPI {
 	}
 
 	public List<SysUser> getSysUserListBySysDeptIdAndSysPositionId(String sysDeptId, String positionId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_DEPT_POSITION_" + sysDeptId + "_" + positionId,
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_DEPT_POSITION_" + sysDeptId + "_" + positionId,
 				new TypeReference() {
 				});
 	}
@@ -181,12 +181,12 @@ public class SysUserDeptPositionAPImpl implements SysUserDeptPositionAPI {
 	}
 
 	public List<SysPosition> getSysPositionListBySysUserId(String sysUserId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER_POSITION_" + sysUserId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER_POSITION_" + sysUserId, new TypeReference() {
 		});
 	}
 
 	public List<SysDept> getSysDeptListBySysUserId(String sysUserId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER_DEPT_" + sysUserId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER_DEPT_" + sysUserId, new TypeReference() {
 		});
 	}
 
@@ -218,7 +218,7 @@ public class SysUserDeptPositionAPImpl implements SysUserDeptPositionAPI {
 	}
 
 	public List<SysUser> getSysUserListBySysPositionId(String sysPositionId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_POSITION_USER_" + sysPositionId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_POSITION_USER_" + sysPositionId, new TypeReference() {
 		});
 	}
 

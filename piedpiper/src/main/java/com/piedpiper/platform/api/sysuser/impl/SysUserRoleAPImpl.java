@@ -1,29 +1,31 @@
 package com.piedpiper.platform.api.sysuser.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.GenericType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.piedpiper.platform.api.session.SessionHelper;
 import com.piedpiper.platform.api.sysuser.SysUserRoleAPI;
 import com.piedpiper.platform.api.sysuser.dto.SysRole;
 import com.piedpiper.platform.api.sysuser.dto.SysUser;
 import com.piedpiper.platform.api.sysuser.dto.SysUserRole;
-import com.piedpiper.platform.core.properties.PlatformConstant.FixedRole;
-import com.piedpiper.platform.core.properties.PlatformConstant.LogType;
+import com.piedpiper.platform.core.properties.PlatformConstant;
 import com.piedpiper.platform.core.redisCacheManager.BaseCacheManager;
 import com.piedpiper.platform.core.rest.client.RestClient;
 import com.piedpiper.platform.core.rest.client.RestClientConfig;
 import com.piedpiper.platform.core.rest.msg.ResponseMsg;
-import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.ArrayList;
-import java.util.List;
-import javax.ws.rs.core.GenericType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 public class SysUserRoleAPImpl implements SysUserRoleAPI {
 	@Autowired
 	private BaseCacheManager baseCacheManager;
 
 	public List<SysUser> getSysUserListBySysRoleId(String sysRoleId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_ROLE_USER_" + sysRoleId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_ROLE_USER_" + sysRoleId, new TypeReference() {
 		});
 	}
 
@@ -63,17 +65,17 @@ public class SysUserRoleAPImpl implements SysUserRoleAPI {
 	}
 
 	public List<SysRole> getSysRoleListBySysUserId(String sysUserId, String appId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER_ROLE_" + sysUserId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER_ROLE_" + sysUserId, new TypeReference() {
 		}, appId);
 	}
 
 	public List<SysRole> getSysRoleListBySysUserIdNoAppId(String sysUserId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER_ROLE_" + sysUserId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER_ROLE_" + sysUserId, new TypeReference() {
 		});
 	}
 
 	public List<SysUserRole> getAllSysUserRole() {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USERROLE", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USERROLE", new TypeReference() {
 		});
 	}
 

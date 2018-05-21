@@ -35,16 +35,17 @@ public class SysMessageAPImpl implements SysMessageAPI {
 	}
 
 	public List<SysMessage> getNoReadSysMessageByUserId(String userId) {
-		this.baseCacheManager.getAllFromCache(
+		return this.baseCacheManager.getAllFromCache(
 				"PLATFORM6_MESSAGE_USER_READ_" + userId + "_0" + "_" + SessionHelper.getApplicationId(),
 				new TypeReference() {
 				});
 	}
 
-	public SysMessage getSysMessageById(String sysMessageId)
-   {
-     (SysMessage)this.baseCacheManager.getObjectFromCache("PLATFORM6_MESSAGE", sysMessageId, new TypeReference() {});
-   }
+	public SysMessage getSysMessageById(String sysMessageId) {
+		return (SysMessage) this.baseCacheManager.getObjectFromCache("PLATFORM6_MESSAGE", sysMessageId,
+				new TypeReference() {
+				});
+	}
 
 	public void insertOrUpdateSysMessagesJSP(List<SysMessage> sysMessages, String userId, String deptId) {
 		String url = RestClientConfig.getRestHost("sysmessage")

@@ -14,7 +14,7 @@ public class SysUserGroupAPImpl implements SysUserGroupAPI {
 	private BaseCacheManager baseCacheManager;
 
 	public List<SysUser> getSysUserListBySysGroupId(String sysGroupId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_GROUP_USER_" + sysGroupId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_GROUP_USER_" + sysGroupId, new TypeReference() {
 		});
 	}
 
@@ -30,7 +30,7 @@ public class SysUserGroupAPImpl implements SysUserGroupAPI {
 	}
 
 	public List<SysGroup> getSysGroupListBySysUserId(String sysUserId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER_GROUP_" + sysUserId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER_GROUP_" + sysUserId, new TypeReference() {
 		});
 	}
 }

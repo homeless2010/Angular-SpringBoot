@@ -1,5 +1,23 @@
 package com.piedpiper.platform.api.session.dto;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.GenericType;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.springframework.util.Assert;
+
 import com.piedpiper.platform.api.portal.SysPortalMenuAPI;
 import com.piedpiper.platform.api.portal.dto.SysPortalMenu;
 import com.piedpiper.platform.api.session.SessionHelper;
@@ -15,24 +33,6 @@ import com.piedpiper.platform.core.rest.msg.ResponseMsg;
 import com.piedpiper.platform.core.shiroSecurity.shiroCache.ShiroCacheManager;
 import com.piedpiper.platform.core.spring.CacheSpringFactory;
 import com.piedpiper.platform.core.spring.SpringFactory;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.GenericType;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.cache.Cache;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
-import org.springframework.util.Assert;
 
 public class SecurityMenu implements Serializable {
 	private static final long serialVersionUID = -897167350520519473L;

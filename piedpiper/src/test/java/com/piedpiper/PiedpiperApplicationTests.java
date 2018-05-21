@@ -11,9 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import com.piedpiper.system.user.controller.LoginController;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -22,7 +19,7 @@ public class PiedpiperApplicationTests {
 
 	@Before
 	public void before() {
-		mvc = MockMvcBuilders.standaloneSetup(new LoginController()).build();
+		// mvc = MockMvcBuilders.standaloneSetup(new LoginController()).build();
 	}
 
 	@Test

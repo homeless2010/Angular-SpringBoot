@@ -21,24 +21,26 @@ public class SysPositionAPImpl implements SysPositionAPI {
 	private BaseCacheManager baseCacheManager;
 
 	public List<SysPosition> getAllSysPositionList() {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_POSITION", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_POSITION", new TypeReference() {
 		});
 	}
 
 	public List<SysPosition> getAllSysPositionListByOrgId(String orgId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_POSITION_ORG_" + orgId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_POSITION_ORG_" + orgId, new TypeReference() {
 		});
 	}
 
-	public SysPositionTl getSysPositionTl(String sysPositionId, String sysLanguageCode)
-   {
-     (SysPositionTl)this.baseCacheManager.getObjectFromCache("PLATFORM6_POSITIONTL", sysPositionId + "_" + sysLanguageCode, new TypeReference() {});
-   }
+	public SysPositionTl getSysPositionTl(String sysPositionId, String sysLanguageCode) {
+		return (SysPositionTl) this.baseCacheManager.getObjectFromCache("PLATFORM6_POSITIONTL",
+				sysPositionId + "_" + sysLanguageCode, new TypeReference() {
+				});
+	}
 
-	public SysPosition getSysPositionBySysPositionId(String sysPositionId)
-   {
-     (SysPosition)this.baseCacheManager.getObjectFromCache("PLATFORM6_POSITION", sysPositionId, new TypeReference() {});
-   }
+	public SysPosition getSysPositionBySysPositionId(String sysPositionId) {
+		return (SysPosition) this.baseCacheManager.getObjectFromCache("PLATFORM6_POSITION", sysPositionId,
+				new TypeReference() {
+				});
+	}
 
 	public String getSysPositionNameBySysPositionId(String sysPositionId, String languageCode) {
 		if (StringUtils.isEmpty(sysPositionId)) {

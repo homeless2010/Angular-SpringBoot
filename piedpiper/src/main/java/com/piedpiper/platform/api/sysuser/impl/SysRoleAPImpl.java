@@ -1,5 +1,13 @@
 package com.piedpiper.platform.api.sysuser.impl;
 
+import java.util.List;
+
+import javax.ws.rs.core.GenericType;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.piedpiper.platform.api.session.SessionHelper;
 import com.piedpiper.platform.api.sysuser.SysRoleAPI;
 import com.piedpiper.platform.api.sysuser.SysUserAPI;
@@ -7,17 +15,12 @@ import com.piedpiper.platform.api.sysuser.dto.SysRole;
 import com.piedpiper.platform.api.sysuser.dto.SysUser;
 import com.piedpiper.platform.core.dao.Paging;
 import com.piedpiper.platform.core.dao.PropertyFilter;
-import com.piedpiper.platform.core.properties.PlatformConstant.FixedRole;
+import com.piedpiper.platform.core.properties.PlatformConstant;
 import com.piedpiper.platform.core.redisCacheManager.BaseCacheManager;
 import com.piedpiper.platform.core.rest.client.RestClient;
 import com.piedpiper.platform.core.rest.client.RestClientConfig;
 import com.piedpiper.platform.core.rest.msg.Muti3Bean;
 import com.piedpiper.platform.core.rest.msg.ResponseMsg;
-import com.fasterxml.jackson.core.type.TypeReference;
-import java.util.List;
-import javax.ws.rs.core.GenericType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
 public class SysRoleAPImpl implements SysRoleAPI {
 	@Autowired
@@ -26,14 +29,14 @@ public class SysRoleAPImpl implements SysRoleAPI {
 	private BaseCacheManager baseCacheManager;
 
 	public List<SysRole> getAllSysRoles() {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_ROLE", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_ROLE", new TypeReference() {
 		});
 	}
 
-	public SysRole getSysRoleById(String id)
-   {
-     (SysRole)this.baseCacheManager.getObjectFromCache("PLATFORM6_ROLE", id, new TypeReference() {});
-   }
+	public SysRole getSysRoleById(String id) {
+		return (SysRole) this.baseCacheManager.getObjectFromCache("PLATFORM6_ROLE", id, new TypeReference() {
+		});
+	}
 
 	public String getSysRoleNameById(String id) {
 		if (StringUtils.isEmpty(id)) {
@@ -46,18 +49,18 @@ public class SysRoleAPImpl implements SysRoleAPI {
 		return "角色无效或者不存在";
 	}
 
-	public SysRole getSysRoleByRoleCode(String roleCode)
-   {
-     (SysRole)this.baseCacheManager.getObjectFromCache("PLATFORM6_ROLECODE", roleCode, new TypeReference() {}, SessionHelper.getApplicationId());
-   }
+	public SysRole getSysRoleByRoleCode(String roleCode) {
+		return (SysRole) this.baseCacheManager.getObjectFromCache("PLATFORM6_ROLECODE", roleCode, new TypeReference() {
+		}, SessionHelper.getApplicationId());
+	}
 
-	public SysRole getSysRoleByRoleCodeAndAppId(String roleCode, String appId)
-   {
-     (SysRole)this.baseCacheManager.getObjectFromCache("PLATFORM6_ROLECODE", roleCode, new TypeReference() {}, appId);
-   }
+	public SysRole getSysRoleByRoleCodeAndAppId(String roleCode, String appId) {
+		return (SysRole) this.baseCacheManager.getObjectFromCache("PLATFORM6_ROLECODE", roleCode, new TypeReference() {
+		}, appId);
+	}
 
 	public List<SysRole> getAllSysRolesByAppId(String appId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_ROLE", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_ROLE", new TypeReference() {
 		}, appId);
 	}
 
@@ -88,7 +91,7 @@ public class SysRoleAPImpl implements SysRoleAPI {
 	}
 
 	public List<SysRole> getRolesByUserId(String userId, String appId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER_ROLE_" + userId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER_ROLE_" + userId, new TypeReference() {
 		}, appId);
 	}
 

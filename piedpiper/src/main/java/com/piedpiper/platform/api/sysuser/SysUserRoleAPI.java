@@ -1,11 +1,11 @@
 package com.piedpiper.platform.api.sysuser;
 
+import java.util.List;
+
 import com.piedpiper.platform.api.sysuser.dto.SysRole;
 import com.piedpiper.platform.api.sysuser.dto.SysUser;
 import com.piedpiper.platform.api.sysuser.dto.SysUserRole;
-import com.piedpiper.platform.core.properties.PlatformConstant.FixedRole;
-import com.piedpiper.platform.core.properties.PlatformConstant.LogType;
-import java.util.List;
+import com.piedpiper.platform.core.properties.PlatformConstant;
 
 public abstract interface SysUserRoleAPI
 {

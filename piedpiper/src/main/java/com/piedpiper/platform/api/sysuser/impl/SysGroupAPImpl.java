@@ -31,24 +31,25 @@ public class SysGroupAPImpl implements SysGroupAPI {
 	private BaseCacheManager baseCacheManager;
 
 	public List<SysGroup> getAllSysGroupList() {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_GROUP", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_GROUP", new TypeReference() {
 		});
 	}
 
 	public List<SysGroup> getAllSysGroupListByAppId(String appId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_GROUP", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_GROUP", new TypeReference() {
 		}, appId);
 	}
 
-	public SysGroupTl getSysGroupTl(String sysGroupId, String sysLanguageCode)
-   {
-     (SysGroupTl)this.baseCacheManager.getObjectFromCache("PLATFORM6_GROUPTL", sysGroupId + "_" + sysLanguageCode, new TypeReference() {});
-   }
+	public SysGroupTl getSysGroupTl(String sysGroupId, String sysLanguageCode) {
+		return (SysGroupTl) this.baseCacheManager.getObjectFromCache("PLATFORM6_GROUPTL",
+				sysGroupId + "_" + sysLanguageCode, new TypeReference() {
+				});
+	}
 
-	public SysGroup getSysGroupBySysGroupId(String sysGroupId)
-   {
-     (SysGroup)this.baseCacheManager.getObjectFromCache("PLATFORM6_GROUP", sysGroupId, new TypeReference() {});
-   }
+	public SysGroup getSysGroupBySysGroupId(String sysGroupId) {
+		return (SysGroup) this.baseCacheManager.getObjectFromCache("PLATFORM6_GROUP", sysGroupId, new TypeReference() {
+		});
+	}
 
 	public String getSysGroupNameBySysGroupId(String sysGroupId, String languageCode) {
 		if (StringUtils.isEmpty(sysGroupId)) {
@@ -76,17 +77,17 @@ public class SysGroupAPImpl implements SysGroupAPI {
 	}
 
 	public List<SysGroup> getSubSysGroupListBySysOrgId(String sysOrgId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_ORG_GROUP_" + sysOrgId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_ORG_GROUP_" + sysOrgId, new TypeReference() {
 		});
 	}
 
 	public List<SysGroup> getSubSysGroupListBySysGroupId(String sysGroupId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_GROUP_GROUP_" + sysGroupId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_GROUP_GROUP_" + sysGroupId, new TypeReference() {
 		});
 	}
 
 	public List<SysGroup> getUserGroupListByUserId(String userId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_CREATEUSER_GROUP_" + userId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_CREATEUSER_GROUP_" + userId, new TypeReference() {
 		});
 	}
 

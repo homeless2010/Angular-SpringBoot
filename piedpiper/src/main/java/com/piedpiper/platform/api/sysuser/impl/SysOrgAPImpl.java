@@ -22,19 +22,20 @@ public class SysOrgAPImpl implements SysOrgAPI {
 	private BaseCacheManager baseCacheManager;
 
 	public List<SysOrg> getAllSysOrgList() {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_ORG", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_ORG", new TypeReference() {
 		});
 	}
 
-	public SysOrgTl getSysOrgTl(String sysOrgId, String sysLanguageCode)
-   {
-     (SysOrgTl)this.baseCacheManager.getObjectFromCache("PLATFORM6_ORGTL", sysOrgId + "_" + sysLanguageCode, new TypeReference() {});
-   }
+	public SysOrgTl getSysOrgTl(String sysOrgId, String sysLanguageCode) {
+		return (SysOrgTl) this.baseCacheManager.getObjectFromCache("PLATFORM6_ORGTL", sysOrgId + "_" + sysLanguageCode,
+				new TypeReference() {
+				});
+	}
 
-	public SysOrg getSysOrgBySysOrgId(String sysOrgId)
-   {
-     (SysOrg)this.baseCacheManager.getObjectFromCache("PLATFORM6_ORG", sysOrgId, new TypeReference() {});
-   }
+	public SysOrg getSysOrgBySysOrgId(String sysOrgId) {
+		return (SysOrg) this.baseCacheManager.getObjectFromCache("PLATFORM6_ORG", sysOrgId, new TypeReference() {
+		});
+	}
 
 	public String getSysOrgNameBySysOrgId(String sysOrgId, String languageCode) {
 		return getSysOrgTl(sysOrgId, languageCode).getOrgName();
@@ -54,7 +55,7 @@ public class SysOrgAPImpl implements SysOrgAPI {
 	}
 
 	public List<SysOrg> getSubSysOrgListBySysOrgId(String sysOrgId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_ORG_ORG_" + sysOrgId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_ORG_ORG_" + sysOrgId, new TypeReference() {
 		});
 	}
 
@@ -126,10 +127,10 @@ public class SysOrgAPImpl implements SysOrgAPI {
 		return this.baseCacheManager.exists("PLATFORM6_ORG_ORG_" + orgId);
 	}
 
-	public String getSysOrgIdByCode(String orgCode)
-   {
-     (String)this.baseCacheManager.getObjectFromCache("PLATFORM6_ORGCODE", orgCode, new TypeReference() {});
-   }
+	public String getSysOrgIdByCode(String orgCode) {
+		return (String) this.baseCacheManager.getObjectFromCache("PLATFORM6_ORGCODE", orgCode, new TypeReference() {
+		});
+	}
 
 	public void insertSysOrg(SysOrgVo sysOrg) {
 		Muti2Bean<SysOrgVo, Map<String, Object>> args = new Muti2Bean();

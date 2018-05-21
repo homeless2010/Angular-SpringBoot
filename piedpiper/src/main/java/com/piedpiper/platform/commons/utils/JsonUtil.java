@@ -1,12 +1,13 @@
 package com.piedpiper.platform.commons.utils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class JsonUtil {
 	public static List<Map<String, Object>> parseJSON2List(String jsonStr)

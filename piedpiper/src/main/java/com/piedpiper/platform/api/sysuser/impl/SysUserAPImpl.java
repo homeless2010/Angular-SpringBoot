@@ -37,12 +37,12 @@ public class SysUserAPImpl implements SysUserAPI {
 	private static final Logger log = LoggerFactory.getLogger(SysUserAPImpl.class);
 
 	public List<SysUser> getAllSysUsers() {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER", new TypeReference() {
 		});
 	}
 
 	public List<SysUser> getAllSysUsersNoFilter() {
-		this.baseCacheManager.getAllFromCacheNoFilter("PLATFORM6_USER", new TypeReference() {
+		return this.baseCacheManager.getAllFromCacheNoFilter("PLATFORM6_USER", new TypeReference() {
 		});
 	}
 

@@ -13,13 +13,15 @@ public class SysUserRelationAPImpl implements SysUserRelationAPI {
 	private BaseCacheManager baseCacheManager;
 
 	public List<SysUser> getSysUser2ListByUser1IdAndRelation(String user1Id, String relation, String currentOrgId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER1_USER2_" + relation + "_" + user1Id, new TypeReference() {
-		});
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER1_USER2_" + relation + "_" + user1Id,
+				new TypeReference() {
+				});
 	}
 
 	public List<SysUser> getSysUser1ListByUser2IdAndRelation(String user2Id, String relation, String currentOrgId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_USER2_USER1_" + relation + "_" + user2Id, new TypeReference() {
-		});
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_USER2_USER1_" + relation + "_" + user2Id,
+				new TypeReference() {
+				});
 	}
 
 	public SysUserRelation getSysUserRelationByUser1IdAndUser2Id(String user1Id, String user2Id, String currentOrgId) {

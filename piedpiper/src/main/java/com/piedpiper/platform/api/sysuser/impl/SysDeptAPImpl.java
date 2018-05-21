@@ -22,19 +22,20 @@ public class SysDeptAPImpl implements SysDeptAPI {
 	private BaseCacheManager baseCacheManager;
 
 	public List<SysDept> getAllSysDeptList() {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_DEPT", new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_DEPT", new TypeReference() {
 		});
 	}
 
-	public SysDept getSysDeptBySysDeptId(String sysDeptId)
-   {
-     (SysDept)this.baseCacheManager.getObjectFromCache("PLATFORM6_DEPT", sysDeptId, new TypeReference() {});
-   }
+	public SysDept getSysDeptBySysDeptId(String sysDeptId) {
+		return (SysDept) this.baseCacheManager.getObjectFromCache("PLATFORM6_DEPT", sysDeptId, new TypeReference() {
+		});
+	}
 
-	public SysDeptTl getSysDeptTl(String sysDeptId, String sysLanguageCode)
-   {
-     (SysDeptTl)this.baseCacheManager.getObjectFromCache("PLATFORM6_DEPTTL", sysDeptId + "_" + sysLanguageCode, new TypeReference() {});
-   }
+	public SysDeptTl getSysDeptTl(String sysDeptId, String sysLanguageCode) {
+		return (SysDeptTl) this.baseCacheManager.getObjectFromCache("PLATFORM6_DEPTTL",
+				sysDeptId + "_" + sysLanguageCode, new TypeReference() {
+				});
+	}
 
 	public List<SysDept> getSubSysDeptsByOrgId(String orgId) {
 		List<SysDept> resultList = new ArrayList();
@@ -49,7 +50,7 @@ public class SysDeptAPImpl implements SysDeptAPI {
 	}
 
 	public List<SysDept> getSysDeptsByOrgId(String orgId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_ORG_DEPT_" + orgId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_ORG_DEPT_" + orgId, new TypeReference() {
 		});
 	}
 
@@ -82,7 +83,7 @@ public class SysDeptAPImpl implements SysDeptAPI {
 	}
 
 	public List<SysDept> getSubSysDeptListBySysDeptId(String sysDeptId) {
-		this.baseCacheManager.getAllFromCache("PLATFORM6_DEPT_DEPT_" + sysDeptId, new TypeReference() {
+		return this.baseCacheManager.getAllFromCache("PLATFORM6_DEPT_DEPT_" + sysDeptId, new TypeReference() {
 		});
 	}
 
@@ -243,14 +244,17 @@ public class SysDeptAPImpl implements SysDeptAPI {
 		return countDeptLevel(sysDept.getParentDeptId(), level);
 	}
 
-	public SysDept getSysDeptBySysDeptName(String deptName, String language)
-   {
-     SysDeptTl tl = (SysDeptTl)this.baseCacheManager.getObjectFromCache("PLATFORM6_DEPT_DEPTNAME", deptName + "_" + language, new TypeReference() {});
-     if (tl != null) {
-       (SysDept)this.baseCacheManager.getObjectFromCache("PLATFORM6_DEPT", tl.getSysDeptId(), new TypeReference() {});
-     }
-     return null;
-   }
+	public SysDept getSysDeptBySysDeptName(String deptName, String language) {
+		SysDeptTl tl = (SysDeptTl) this.baseCacheManager.getObjectFromCache("PLATFORM6_DEPT_DEPTNAME",
+				deptName + "_" + language, new TypeReference() {
+				});
+		if (tl != null) {
+			return (SysDept) this.baseCacheManager.getObjectFromCache("PLATFORM6_DEPT", tl.getSysDeptId(),
+					new TypeReference() {
+					});
+		}
+		return null;
+	}
 
 	public void insertSysDept(SysDept sysDept) {
 		if ((sysDept.getOrgId() == null) || ("".equals(sysDept.getOrgId()))) {

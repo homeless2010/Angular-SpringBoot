@@ -126,14 +126,14 @@ public class SqlUtil {
          parser = new SqlUtil.MysqlParser(null);
          break;
        case 4: 
-         parser = new SqlUtil.OracleParser(null);
+         parser = new SqlUtil.OracleParser();
          break;
        case 5: 
-         parser = new SqlUtil.HsqldbParser(null);
+         parser = new SqlUtil.HsqldbParser();
          break;
        case 6: 
        default: 
-         parser = new SqlUtil.PostgreSQLParser(null);
+         parser = new SqlUtil.PostgreSQLParser();
        }
        return parser;
      }

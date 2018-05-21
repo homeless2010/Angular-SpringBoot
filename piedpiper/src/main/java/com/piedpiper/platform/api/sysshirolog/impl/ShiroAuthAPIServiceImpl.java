@@ -25,10 +25,8 @@ import org.springframework.core.io.ClassPathResource;
 
 public class ShiroAuthAPIServiceImpl implements IAuthServiceAPI {
 	private static final Logger log = LoggerFactory.getLogger(ShiroAuthAPIServiceImpl.class);
-
 	private static final String CRLF = "\r\n";
-
-	private static final String LAST_AUTH_STR = "   
+	private static final String LAST_AUTH_STR = "/** =authc,avicit\r\n";
 
 	@Autowired
 	private ShiroFilterFactoryBean shiroFilterFactoryBean;
@@ -36,13 +34,13 @@ public class ShiroAuthAPIServiceImpl implements IAuthServiceAPI {
 	@Autowired
 	private BaseCacheManager baseCacheManager;
 
-	public String loadFilterChainDefinitions()
-   {
-     StringBuffer sb = new StringBuffer("");
-     
-     sb.append(getFixedAuthRule()).append("     
-     return sb.toString();
-   }
+	public String loadFilterChainDefinitions() {
+		StringBuffer sb = new StringBuffer("");
+
+		sb.append(getFixedAuthRule()).append("/** =authc,avicit\r\n");
+
+		return sb.toString();
+	}
 
 	private String getFixedAuthRule() {
 		StringBuffer sb = new StringBuffer("");
@@ -55,7 +53,7 @@ public class ShiroAuthAPIServiceImpl implements IAuthServiceAPI {
 			log.error("auth-shiro.properties error!", e);
 			throw new RuntimeException("load auth-shiro.properties error!");
 		}
-		for (Iterator<Object> its = properties.keySet().iterator(); its.hasNext();) {
+		for (Iterator its = properties.keySet().iterator(); its.hasNext();) {
 			String key = (String) its.next();
 			sb.append(key).append(" = ").append(properties.getProperty(key).trim()).append("\r\n");
 		}
@@ -77,8 +75,8 @@ public class ShiroAuthAPIServiceImpl implements IAuthServiceAPI {
 		manager.getFilterChains().clear();
 		this.shiroFilterFactoryBean.getFilterChainDefinitionMap().clear();
 		this.shiroFilterFactoryBean.setFilterChainDefinitions(loadFilterChainDefinitions());
-		Map<String, String> chains = this.shiroFilterFactoryBean.getFilterChainDefinitionMap();
-		for (Map.Entry<String, String> entry : chains.entrySet()) {
+		Map<String,String> chains = this.shiroFilterFactoryBean.getFilterChainDefinitionMap();
+		for (Map.Entry entry : chains.entrySet()) {
 			String url = (String) entry.getKey();
 			String chainDefinition = ((String) entry.getValue()).trim().replace(" ", "");
 			manager.createChain(url, chainDefinition);
@@ -94,17 +92,19 @@ public class ShiroAuthAPIServiceImpl implements IAuthServiceAPI {
 	}
 
 	private Set<String> findRolesByUserId(String userId) {
-		List<SysRole> rolelist = this.baseCacheManager.getAllFromCache("PLATFORM6_USER_ROLE_" + userId,
-				new TypeReference() {
-				}, SessionHelper.getApplicationId());
+		List<SysRole> rolelist = this.baseCacheManager.getAllFromCache("PLATFORM6_USER_ROLE_" + userId, new TypeReference() {
+		}, SessionHelper.getApplicationId());
 
-		Set<String> set = new HashSet(rolelist.size());
+		Set set = new HashSet(rolelist.size());
 		for (SysRole role : rolelist) {
-			if ((role != null) && (role.getRoleName() != null) && (!role.getRoleName().equals(""))) {
-
-				set.add(role.getRoleName());
+			if ((role == null) || (role.getRoleName() == null))
+				continue;
+			if (role.getRoleName().equals("")) {
+				continue;
 			}
+			set.add(role.getRoleName());
 		}
+
 		return set;
 	}
 }
