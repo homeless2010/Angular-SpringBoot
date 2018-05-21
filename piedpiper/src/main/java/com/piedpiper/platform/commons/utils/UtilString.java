@@ -95,9 +95,8 @@ public class UtilString {
 
 		String strReplace;
 		String strCore;
-		String strReplace;
 		if (ignoreCase) {
-			String strCore = lowcaseSuper;
+			strCore = lowcaseSuper;
 			strReplace = strOld.toLowerCase();
 		} else {
 			strCore = strInit;

@@ -1,12 +1,5 @@
 package com.piedpiper.platform.commons.utils;
 
-import com.piedpiper.platform.core.domain.BeanBase;
-import com.piedpiper.platform.core.domain.BeanDTO;
-import com.piedpiper.platform.core.exception.DaoException;
-import com.piedpiper.platform.core.exception.UtilsException;
-import com.piedpiper.platform.core.filter.session.RedisSessionService;
-import com.piedpiper.platform.core.properties.PlatformConstant.OpType;
-import com.piedpiper.platform.core.shiroSecurity.contextThread.ContextCommonHolder;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -15,11 +8,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.DynaBean;
-import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.beanutils.DynaProperty;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
@@ -28,6 +19,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import com.piedpiper.platform.core.domain.BeanBase;
+import com.piedpiper.platform.core.domain.BeanDTO;
+import com.piedpiper.platform.core.exception.DaoException;
+import com.piedpiper.platform.core.exception.UtilsException;
+import com.piedpiper.platform.core.filter.session.RedisSessionService;
+import com.piedpiper.platform.core.properties.PlatformConstant;
+import com.piedpiper.platform.core.shiroSecurity.contextThread.ContextCommonHolder;
 
 public class PojoUtil {
 	static Logger logger = LoggerFactory.getLogger(PojoUtil.class);

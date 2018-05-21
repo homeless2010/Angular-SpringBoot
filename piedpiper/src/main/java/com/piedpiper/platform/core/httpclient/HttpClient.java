@@ -63,7 +63,7 @@ import com.piedpiper.platform.commons.utils.JsonHelper;
          catch (Exception ignore) {}
          
  
-         sslcontext = SSLContexts.custom().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
+         SSLContexts sslcontext = SSLContexts.custom().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
        }
        catch (CertificateException e)
        {

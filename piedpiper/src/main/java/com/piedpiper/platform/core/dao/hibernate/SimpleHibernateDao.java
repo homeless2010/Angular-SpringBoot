@@ -1,12 +1,10 @@
 package com.piedpiper.platform.core.dao.hibernate;
 
-import com.piedpiper.platform.commons.utils.PojoUtil;
-import com.piedpiper.platform.commons.utils.reflection.ReflectionUtils;
-import com.piedpiper.platform.core.properties.PlatformConstant.OpType;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -21,6 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
+
+import com.piedpiper.platform.commons.utils.PojoUtil;
+import com.piedpiper.platform.commons.utils.reflection.ReflectionUtils;
+import com.piedpiper.platform.core.properties.PlatformConstant;
 
 public class SimpleHibernateDao<T, PK extends Serializable> {
 	protected Logger logger = LoggerFactory.getLogger(getClass());

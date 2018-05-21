@@ -1,12 +1,13 @@
 package com.piedpiper.platform.commons.utils;
 
+import org.springframework.util.Assert;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
-import org.springframework.util.Assert;
 
 public class Pinyin4jUtil {
 	public static String getPinYin(String src) {

@@ -175,7 +175,7 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
                 jedis.disconnect();
 
                 if (jedis == null) break label376;
-                jedis.close(); break label376:
+                jedis.close(); break label376
               }
             }
           }
@@ -279,7 +279,7 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 								if (index >= 0) {
 									HostAndPort newHostMaster = JedisSentinelPool.MasterListener.this.this$0
 											.toHostAndPort(Arrays
-													.asList(new String[]{switchMasterMsg[3], switchMasterMsg[4]}));
+													.asList(new String[] { switchMasterMsg[3], switchMasterMsg[4] }));
 									List newHostMasters = new ArrayList();
 									for (int i = 0; i < JedisSentinelPool.MasterListener.this.masters.size(); ++i) {
 										newHostMasters.add(null);
@@ -308,7 +308,7 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 												+ " on channel +switch-master: " + message);
 							}
 						}
-					}, new String[]{"+switch-master"});
+					}, new String[] { "+switch-master" });
 				} catch (JedisConnectionException e) {
 					if (this.running.get()) {
 						this.this$0.log.error("Lost connection to Sentinel at " + this.host + ":" + this.port
