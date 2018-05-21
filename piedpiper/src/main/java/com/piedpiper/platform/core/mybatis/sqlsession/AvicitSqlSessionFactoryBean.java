@@ -163,7 +163,6 @@ public class AvicitSqlSessionFactoryBean extends SqlSessionFactoryBean {
 	protected SqlSessionFactory buildSqlSessionFactory() throws IOException {
 		XMLConfigBuilder xmlConfigBuilder = null;
 		Configuration configuration;
-		Configuration configuration;
 		if (this.configLocation != null) {
 			xmlConfigBuilder = new XMLConfigBuilder(this.configLocation.getInputStream(), null,
 					this.configurationProperties);

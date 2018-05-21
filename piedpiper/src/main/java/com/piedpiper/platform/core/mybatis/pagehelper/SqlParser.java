@@ -29,8 +29,7 @@
    private static final List<SelectItem> COUNT_ITEM = new ArrayList();
    static { COUNT_ITEM.add(new net.sf.jsqlparser.statement.select.SelectExpressionItem(new net.sf.jsqlparser.schema.Column("count(1)")));
      
-     TABLE_ALIAS = new Alias("table_count");
-     TABLE_ALIAS.setUseAs(false); }
+    
    
    private static final Alias TABLE_ALIAS;
    private SqlUtil.Parser simpleParser;

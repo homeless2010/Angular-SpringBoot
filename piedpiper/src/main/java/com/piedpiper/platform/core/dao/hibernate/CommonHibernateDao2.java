@@ -329,11 +329,11 @@ public class CommonHibernateDao2 {
 
 	private <X> X findUnique(String hql, Object[] values) {
 		Object uniqueResult = createQuery(hql, values).uniqueResult();
-		return uniqueResult;
+		return (X) uniqueResult;
 	}
 
 	public <X> X findUnique1(String hql, Map<String, ?> values) {
-		return createQuery1(hql, values).uniqueResult();
+		return (X) createQuery1(hql, values).uniqueResult();
 	}
 
 	public void flush() throws DataAccessException {
@@ -573,33 +573,30 @@ public class CommonHibernateDao2 {
 		getHibernateTemplate().update(entityName, entity, lockMode);
 	}
 
-	protected Criterion buildCriterion(String propertyName, Object propertyValue, PropertyFilter.MatchType matchType)
-  {
-    Assert.hasText(propertyName, "propertyName不能为空");
-    Criterion criterion = null;
-
-    switch (1.$SwitchMap$avicit$platform6$core$dao$PropertyFilter$MatchType[matchType.ordinal()])
-    {
-    case 1:
-      criterion = Restrictions.eq(propertyName, propertyValue);
-      break;
-    case 2:
-      criterion = Restrictions.like(propertyName, (String)propertyValue, MatchMode.ANYWHERE);
-      break;
-    case 3:
-      criterion = Restrictions.le(propertyName, propertyValue);
-      break;
-    case 4:
-      criterion = Restrictions.lt(propertyName, propertyValue);
-      break;
-    case 5:
-      criterion = Restrictions.ge(propertyName, propertyValue);
-      break;
-    case 6:
-      criterion = Restrictions.gt(propertyName, propertyValue);
-    }
-    return criterion;
-  }
+	protected Criterion buildCriterion(String propertyName, Object propertyValue, PropertyFilter.MatchType matchType) {
+		Assert.hasText(propertyName, "propertyName不能为空");
+		Criterion criterion = null;
+		switch (matchType) {
+		case EQ:
+			criterion = Restrictions.eq(propertyName, propertyValue);
+			break;
+		case LIKE:
+			criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.ANYWHERE);
+			break;
+		case LE:
+			criterion = Restrictions.le(propertyName, propertyValue);
+			break;
+		case LT:
+			criterion = Restrictions.lt(propertyName, propertyValue);
+			break;
+		case GE:
+			criterion = Restrictions.ge(propertyName, propertyValue);
+			break;
+		case GT:
+			criterion = Restrictions.gt(propertyName, propertyValue);
+		}
+		return criterion;
+	}
 
 	protected Criterion[] buildCriterionByPropertyFilter(List<PropertyFilter> filters) {
 		List criterionList = new ArrayList();
@@ -817,46 +814,45 @@ public class CommonHibernateDao2 {
 		return hql;
 	}
 
-	private String buildHqlDynamicCondition(String hql, PropertyFilter filter, String relationChar, Map<String, Object> conditionsValues)
-  {
-    String propertyName = filter.getPropertyName();
-    Object propertyValue = filter.getMatchValue();
-    conditionsValues.put(propertyName, propertyValue.toString().trim());
-    PropertyFilter.MatchType matchType = filter.getMatchType();
-    switch (1.$SwitchMap$avicit$platform6$core$dao$PropertyFilter$MatchType[matchType.ordinal()])
-    {
-    case 1:
-      hql = hql + " " + relationChar + " " + propertyName + "=:" + propertyName;
-      break;
-    case 2:
-      hql = hql + " " + relationChar + " " + propertyName + " like :" + propertyName;
-      conditionsValues.put(propertyName, "%" + propertyValue.toString().trim() + "%");
-      break;
-    case 3:
-      hql = hql + " " + relationChar + " " + propertyName + "<=:" + propertyName;
-      break;
-    case 4:
-      hql = hql + " " + relationChar + " " + propertyName + "<:" + propertyName;
-      break;
-    case 5:
-      hql = hql + " " + relationChar + " " + propertyName + ">=:" + propertyName;
-      break;
-    case 6:
-      hql = hql + " " + relationChar + " " + propertyName + ">:" + propertyName;
-      break;
-    case 7:
-      hql = hql + " " + relationChar + " " + propertyName + " between " + ((String)propertyValue);
-    }
+	private String buildHqlDynamicCondition(String hql, PropertyFilter filter, String relationChar,
+			Map<String, Object> conditionsValues) {
+		String propertyName = filter.getPropertyName();
+		Object propertyValue = filter.getMatchValue();
+		conditionsValues.put(propertyName, propertyValue.toString().trim());
+		PropertyFilter.MatchType matchType = filter.getMatchType();
+		switch (matchType) {
+		case EQ:
+			hql = hql + " " + relationChar + " " + propertyName + "=:" + propertyName;
+			break;
+		case LIKE:
+			hql = hql + " " + relationChar + " " + propertyName + " like :" + propertyName;
+			conditionsValues.put(propertyName, "%" + propertyValue.toString().trim() + "%");
+			break;
+		case LE:
+			hql = hql + " " + relationChar + " " + propertyName + "<=:" + propertyName;
+			break;
+		case LT:
+			hql = hql + " " + relationChar + " " + propertyName + "<:" + propertyName;
+			break;
+		case GE:
+			hql = hql + " " + relationChar + " " + propertyName + ">=:" + propertyName;
+			break;
+		case GT:
+			hql = hql + " " + relationChar + " " + propertyName + ">:" + propertyName;
+			break;
+		case BT:
+			hql = hql + " " + relationChar + " " + propertyName + " between " + ((String) propertyValue);
+		}
 
-    return hql;
-  }
+		return hql;
+	}
 
 	public <T> Paging<T> findPageBySQL(Paging<T> page, String pSql, Map<String, Object> parameter) {
 		Assert.notNull(page, "page不能为空");
 		String querSql = "select * from ( " + pSql + " ) where 1=1 ";
 
 		List filters = PropertyFilter.buildFromParameterMap(parameter);
-		HashMap ValueMap = new HashMap();
+		HashMap<String, Object> ValueMap = new HashMap();
 		if (null != parameter) {
 			querSql = buildDynamicSql(filters, querSql, ValueMap);
 		}
@@ -916,37 +912,38 @@ public class CommonHibernateDao2 {
 		}
 	}
 
-	private String buildSqlDynamicCondition(String hql, PropertyFilter filter, String relationChar, Map<String, Object> conditionsValues) {
-    String propertyName = filter.getPropertyName();
-    Object propertyValue = filter.getMatchValue();
-    conditionsValues.put(propertyName, propertyValue.toString().trim());
-    PropertyFilter.MatchType matchType = filter.getMatchType();
-    switch (1.$SwitchMap$avicit$platform6$core$dao$PropertyFilter$MatchType[matchType.ordinal()])
-    {
-    case 1:
-      hql = hql + " " + relationChar + " " + propertyName + "=:" + propertyName;
-      break;
-    case 2:
-      hql = hql + " " + relationChar + " " + propertyName + " like :" + propertyName;
-      conditionsValues.put(propertyName, "%" + propertyValue.toString().trim() + "%");
-      break;
-    case 3:
-      hql = hql + " " + relationChar + " " + propertyName + "<=:" + propertyName;
-      break;
-    case 4:
-      hql = hql + " " + relationChar + " " + propertyName + "<:" + propertyName;
-      break;
-    case 5:
-      hql = hql + " " + relationChar + " " + propertyName + ">=:" + propertyName;
-      break;
-    case 6:
-      hql = hql + " " + relationChar + " " + propertyName + ">:" + propertyName;
-      break;
-    case 7:
-      hql = hql + " " + relationChar + " " + propertyName + " between " + ((String)propertyValue);
-    }
+	private String buildSqlDynamicCondition(String hql, PropertyFilter filter, String relationChar,
+			Map<String, Object> conditionsValues) {
+		String propertyName = filter.getPropertyName();
+		Object propertyValue = filter.getMatchValue();
+		conditionsValues.put(propertyName, propertyValue.toString().trim());
+		PropertyFilter.MatchType matchType = filter.getMatchType();
+		switch (matchType) {
+		case EQ:
+			hql = hql + " " + relationChar + " " + propertyName + "=:" + propertyName;
+			break;
+		case LIKE:
+			hql = hql + " " + relationChar + " " + propertyName + " like :" + propertyName;
+			conditionsValues.put(propertyName, "%" + propertyValue.toString().trim() + "%");
+			break;
+		case LE:
+			hql = hql + " " + relationChar + " " + propertyName + "<=:" + propertyName;
+			break;
+		case LT:
+			hql = hql + " " + relationChar + " " + propertyName + "<:" + propertyName;
+			break;
+		case GE:
+			hql = hql + " " + relationChar + " " + propertyName + ">=:" + propertyName;
+			break;
+		case GT:
+			hql = hql + " " + relationChar + " " + propertyName + ">:" + propertyName;
+			break;
+		case BT:
+			hql = hql + " " + relationChar + " " + propertyName + " between " + ((String) propertyValue);
+		}
 
-    return hql; }
+		return hql;
+	}
 
 	public List<Map> findListMapBySQL(String sql) {
 		SQLQuery sqlquery = getSession().createSQLQuery(sql);

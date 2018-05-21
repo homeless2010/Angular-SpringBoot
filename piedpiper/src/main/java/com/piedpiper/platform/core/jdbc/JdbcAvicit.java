@@ -75,7 +75,7 @@ public class JdbcAvicit {
 							.longValue();
 			this.logger.debug("PAGE-SQL: " + sqll);
 
-			Collection<T> result = this.namedParameterJdbcOperations.query(sqll, mapSqlParam, new ResultMap(null));
+			Collection<T> result = (Collection<T>) this.namedParameterJdbcOperations.query(sqll, mapSqlParam, new ResultMap());
 			page.setEntities(result);
 			page.setEntityCount(count);
 			return;
@@ -93,7 +93,7 @@ public class JdbcAvicit {
 
 		long count = ((Long) this.namedParameterJdbcOperations
 				.queryForObject("select count(1) from (" + sql + ") t_avicit", mapSqlParam, Long.class)).longValue();
-		Collection<T> ddd = this.namedParameterJdbcOperations.query(sqll, mapSqlParam, new ResultMap(null));
+		Collection<T> ddd = (Collection<T>) this.namedParameterJdbcOperations.query(sqll, mapSqlParam, new ResultMap());
 		page.setEntities(ddd);
 		page.setEntityCount(count);
 	}
@@ -120,7 +120,8 @@ public class JdbcAvicit {
 		long count = ((Long) this.namedParameterJdbcOperations
 				.queryForObject("select count(1) from (" + sql + ") t_avicit", mapSqlParam, Long.class)).longValue();
 		this.logger.debug("PAGE-SQL: " + sqll);
-		Collection<T> ddd = this.namedParameterJdbcOperations.query(sqll, mapSqlParam, new ColumnPropertyRowMapper());
+		Collection<T> ddd = (Collection<T>) this.namedParameterJdbcOperations.query(sqll, mapSqlParam,
+				new ColumnPropertyRowMapper());
 		page.setEntities(ddd);
 		page.setEntityCount(count);
 	}

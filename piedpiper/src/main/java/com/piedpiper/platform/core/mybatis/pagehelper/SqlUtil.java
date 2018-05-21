@@ -123,7 +123,7 @@ public class SqlUtil {
        case 1: 
        case 2: 
        case 3: 
-         parser = new SqlUtil.MysqlParser(null);
+         parser = new SqlUtil.MysqlParser();
          break;
        case 4: 
          parser = new SqlUtil.OracleParser();
