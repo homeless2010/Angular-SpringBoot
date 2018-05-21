@@ -55,7 +55,7 @@ public class CommonHibernateDao2 {
 		return getHibernateTemplate().bulkUpdate(queryString);
 	}
 
-	public int bulkUpdate(String queryString, Object... values) throws DataAccessException {
+	public int bulkUpdate(String queryString, Object[] values) throws DataAccessException {
 		return getHibernateTemplate().bulkUpdate(queryString, values);
 	}
 
@@ -81,7 +81,7 @@ public class CommonHibernateDao2 {
 		Projection projection = impl.getProjection();
 		ResultTransformer transformer = impl.getResultTransformer();
 
-		List<CriteriaImpl.OrderEntry> orderEntries = null;
+		List orderEntries = null;
 		try {
 			orderEntries = (List) ReflectionUtils.getFieldValue(impl, "orderEntries");
 			ReflectionUtils.setFieldValue(impl, "orderEntries", new ArrayList());
@@ -90,16 +90,15 @@ public class CommonHibernateDao2 {
 		}
 
 		Long totalCountObject = (Long) c.setProjection(Projections.rowCount()).uniqueResult();
-		long totalCount = totalCountObject != null ? totalCountObject.longValue() : 0L;
+		long totalCount = (totalCountObject != null) ? totalCountObject.longValue() : 0L;
 
 		c.setProjection(projection);
 
 		if (projection == null) {
 			c.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		}
-		if (transformer != null) {
+		if (transformer != null)
 			c.setResultTransformer(transformer);
-		}
 		try {
 			ReflectionUtils.setFieldValue(impl, "orderEntries", orderEntries);
 		} catch (Exception e) {
@@ -109,7 +108,7 @@ public class CommonHibernateDao2 {
 		return totalCount;
 	}
 
-	public long countHqlResult(String hql, Object... values) {
+	public long countHqlResult(String hql, Object[] values) {
 		String countHql = prepareCountHql(hql);
 		try {
 			Long count = (Long) findUnique(countHql, values);
@@ -129,13 +128,13 @@ public class CommonHibernateDao2 {
 		}
 	}
 
-	public Query createQuery(String queryString, Object... values) {
+	public Query createQuery(String queryString, Object[] values) {
 		Assert.hasText(queryString, "queryString不能为空");
 		Query query = getSession().createQuery(queryString);
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] == null) {
+		for (int i = 0; i < values.length; ++i) {
+			if (values[i] == null)
 				query.setParameter(i, null);
-			} else {
+			else {
 				query.setParameter(i, values[i]);
 			}
 		}
@@ -171,7 +170,7 @@ public class CommonHibernateDao2 {
 	}
 
 	public <T> T execute(HibernateCallback<T> action) throws DataAccessException {
-		return (T) getHibernateTemplate().execute(action);
+		return getHibernateTemplate().execute(action);
 	}
 
 	public List executeFind(HibernateCallback<?> action) throws DataAccessException {
@@ -179,18 +178,18 @@ public class CommonHibernateDao2 {
 	}
 
 	public <T> T executeWithNativeSession(HibernateCallback<T> action) {
-		return (T) getHibernateTemplate().executeWithNativeSession(action);
+		return getHibernateTemplate().executeWithNativeSession(action);
 	}
 
 	public <T> T executeWithNewSession(HibernateCallback<T> action) {
-		return (T) getHibernateTemplate().executeWithNewSession(action);
+		return getHibernateTemplate().executeWithNewSession(action);
 	}
 
 	public List find(String queryString) throws DataAccessException {
 		return getHibernateTemplate().find(queryString);
 	}
 
-	public List find(String queryString, Object... values) throws DataAccessException {
+	public List find(String queryString, Object[] values) throws DataAccessException {
 		return getHibernateTemplate().find(queryString, values);
 	}
 
@@ -204,7 +203,7 @@ public class CommonHibernateDao2 {
 		page.setTotalCount(countCriteriaResult(c));
 		c.setFirstResult(page.getFirst() - 1);
 		c.setMaxResults(page.getPageSize());
-		List<T> result = c.list();
+		List result = c.list();
 		page.setResult(result);
 		return page;
 	}
@@ -248,16 +247,16 @@ public class CommonHibernateDao2 {
 
 		setPageParameterToQuery(q, page);
 
-		List<T> result = q.list();
+		List result = q.list();
 		page.setResult(result);
 		return page;
 	}
 
-	public <T> Paging<T> findByHQLForPage(Paging<T> page, String hql, Object... params) {
+	public <T> Paging<T> findByHQLForPage(Paging<T> page, String hql, Object[] params) {
 		Assert.notNull(page, "page不能为空");
 
 		Query q = getSession().createQuery(hql);
-		for (int i = 0; i < params.length; i++) {
+		for (int i = 0; i < params.length; ++i) {
 			q.setParameter(i, params[i]);
 		}
 
@@ -268,7 +267,7 @@ public class CommonHibernateDao2 {
 
 		setPageParameterToQuery(q, page);
 
-		List<T> result = q.list();
+		List result = q.list();
 		page.setResult(result);
 		return page;
 	}
@@ -285,7 +284,7 @@ public class CommonHibernateDao2 {
 		return getHibernateTemplate().findByNamedQuery(queryName);
 	}
 
-	public List findByNamedQuery(String queryName, Object... values) throws DataAccessException {
+	public List findByNamedQuery(String queryName, Object[] values) throws DataAccessException {
 		return getHibernateTemplate().findByNamedQuery(queryName, values);
 	}
 
@@ -316,9 +315,9 @@ public class CommonHibernateDao2 {
 		return session.createSQLQuery(sql).list();
 	}
 
-	public List findBySQL(String sql, Object... params) {
+	public List findBySQL(String sql, Object[] params) {
 		SQLQuery sqlquery = getSession().createSQLQuery(sql);
-		for (int i = 0; i < params.length; i++) {
+		for (int i = 0; i < params.length; ++i) {
 			sqlquery.setParameter(i, params[i]);
 		}
 		return sqlquery.list();
@@ -328,13 +327,13 @@ public class CommonHibernateDao2 {
 		return getHibernateTemplate().findByValueBean(queryString, valueBean);
 	}
 
-	private <X> X findUnique(String hql, Object... values) {
-		X uniqueResult = createQuery(hql, values).uniqueResult();
+	private <X> X findUnique(String hql, Object[] values) {
+		Object uniqueResult = createQuery(hql, values).uniqueResult();
 		return uniqueResult;
 	}
 
 	public <X> X findUnique1(String hql, Map<String, ?> values) {
-		return (X) createQuery1(hql, values).uniqueResult();
+		return createQuery1(hql, values).uniqueResult();
 	}
 
 	public void flush() throws DataAccessException {
@@ -342,11 +341,11 @@ public class CommonHibernateDao2 {
 	}
 
 	public <T> T get(Class<T> entityClass, Serializable id) throws DataAccessException {
-		return (T) getHibernateTemplate().get(entityClass, id);
+		return getHibernateTemplate().get(entityClass, id);
 	}
 
 	public <T> T get(Class<T> entityClass, Serializable id, LockMode lockMode) throws DataAccessException {
-		return (T) getHibernateTemplate().get(entityClass, id, lockMode);
+		return getHibernateTemplate().get(entityClass, id, lockMode);
 	}
 
 	public Object get(String entityName, Serializable id) throws DataAccessException {
@@ -382,9 +381,9 @@ public class CommonHibernateDao2 {
 	}
 
 	public void closeSession(Session session) {
-		if (session != null) {
-			session.close();
-		}
+		if (session == null)
+			return;
+		session.close();
 	}
 
 	public void initialize(Object proxy) throws DataAccessException {
@@ -415,7 +414,7 @@ public class CommonHibernateDao2 {
 		return getHibernateTemplate().iterate(queryString);
 	}
 
-	public Iterator<?> iterate(String queryString, Object... values) throws DataAccessException {
+	public Iterator<?> iterate(String queryString, Object[] values) throws DataAccessException {
 		return getHibernateTemplate().iterate(queryString, values);
 	}
 
@@ -424,11 +423,11 @@ public class CommonHibernateDao2 {
 	}
 
 	public <T> T load(Class<T> entityClass, Serializable id) throws DataAccessException {
-		return (T) getHibernateTemplate().load(entityClass, id);
+		return getHibernateTemplate().load(entityClass, id);
 	}
 
 	public <T> T load(Class<T> entityClass, Serializable id, LockMode lockMode) throws DataAccessException {
-		return (T) getHibernateTemplate().load(entityClass, id, lockMode);
+		return getHibernateTemplate().load(entityClass, id, lockMode);
 	}
 
 	public void load(Object entity, Serializable id) throws DataAccessException {
@@ -456,11 +455,11 @@ public class CommonHibernateDao2 {
 	}
 
 	public <T> T merge(String entityName, T entity) throws DataAccessException {
-		return (T) getHibernateTemplate().merge(entityName, entity);
+		return getHibernateTemplate().merge(entityName, entity);
 	}
 
 	public <T> T merge(T entity) throws DataAccessException {
-		return (T) getHibernateTemplate().merge(entity);
+		return getHibernateTemplate().merge(entity);
 	}
 
 	public void persist(Object entity) throws DataAccessException {
@@ -574,38 +573,39 @@ public class CommonHibernateDao2 {
 		getHibernateTemplate().update(entityName, entity, lockMode);
 	}
 
-	protected Criterion buildCriterion(String propertyName, Object propertyValue, PropertyFilter.MatchType matchType) {
-		Assert.hasText(propertyName, "propertyName不能为空");
-		Criterion criterion = null;
+	protected Criterion buildCriterion(String propertyName, Object propertyValue, PropertyFilter.MatchType matchType)
+  {
+    Assert.hasText(propertyName, "propertyName不能为空");
+    Criterion criterion = null;
 
-		switch (matchType) {
-		case EQ:
-			criterion = Restrictions.eq(propertyName, propertyValue);
-			break;
-		case LIKE:
-			criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.ANYWHERE);
-			break;
-
-		case LE:
-			criterion = Restrictions.le(propertyName, propertyValue);
-			break;
-		case LT:
-			criterion = Restrictions.lt(propertyName, propertyValue);
-			break;
-		case GE:
-			criterion = Restrictions.ge(propertyName, propertyValue);
-			break;
-		case GT:
-			criterion = Restrictions.gt(propertyName, propertyValue);
-		}
-		return criterion;
-	}
+    switch (1.$SwitchMap$avicit$platform6$core$dao$PropertyFilter$MatchType[matchType.ordinal()])
+    {
+    case 1:
+      criterion = Restrictions.eq(propertyName, propertyValue);
+      break;
+    case 2:
+      criterion = Restrictions.like(propertyName, (String)propertyValue, MatchMode.ANYWHERE);
+      break;
+    case 3:
+      criterion = Restrictions.le(propertyName, propertyValue);
+      break;
+    case 4:
+      criterion = Restrictions.lt(propertyName, propertyValue);
+      break;
+    case 5:
+      criterion = Restrictions.ge(propertyName, propertyValue);
+      break;
+    case 6:
+      criterion = Restrictions.gt(propertyName, propertyValue);
+    }
+    return criterion;
+  }
 
 	protected Criterion[] buildCriterionByPropertyFilter(List<PropertyFilter> filters) {
-		List<Criterion> criterionList = new ArrayList();
+		List criterionList = new ArrayList();
 		if (filters != null) {
 			for (PropertyFilter filter : filters) {
-				if (!filter.hasMultiProperties()) {
+				if (!(filter.hasMultiProperties())) {
 					Criterion criterion = buildCriterion(filter.getPropertyName(), filter.getMatchValue(),
 							filter.getMatchType());
 					criterionList.add(criterion);
@@ -623,7 +623,7 @@ public class CommonHibernateDao2 {
 				}
 			}
 		}
-		return (Criterion[]) criterionList.toArray(new Criterion[criterionList.size()]);
+		return ((Criterion[]) criterionList.toArray(new Criterion[criterionList.size()]));
 	}
 
 	protected <T> Criteria setPageParameterToCriteria(Criteria c, Paging<T> page) {
@@ -638,10 +638,10 @@ public class CommonHibernateDao2 {
 
 			Assert.isTrue(orderByArray.length == orderArray.length, "分页多重排序参数中,排序字段与排序方向的个数不相等");
 
-			for (int i = 0; i < orderByArray.length; i++) {
-				if ("asc".equals(orderArray[i])) {
+			for (int i = 0; i < orderByArray.length; ++i) {
+				if ("asc".equals(orderArray[i]))
 					c.addOrder(Order.asc(orderByArray[i]));
-				} else {
+				else {
 					c.addOrder(Order.desc(orderByArray[i]));
 				}
 			}
@@ -659,7 +659,7 @@ public class CommonHibernateDao2 {
 		long beginTime = System.currentTimeMillis();
 
 		String vCall = "{call " + procedure + "(";
-		for (int i = 0; i < parameter.size(); i++) {
+		for (int i = 0; i < parameter.size(); ++i) {
 			vCall = vCall + "'" + parameter.get(i).toString() + "',";
 		}
 		vCall = vCall + "?,?)}";
@@ -674,15 +674,7 @@ public class CommonHibernateDao2 {
 			cstmt.execute();
 			cstmtCode = cstmt.getInt(1);
 			cstmtMessage = cstmt.getString(2);
-
 		} catch (SQLException e) {
-
-			if (4068 == e.getErrorCode()) {
-				logger.error("检测到包 " + procedure + " 的状态发生变化", e);
-				throw new DaoException("检测到数据库发生 ORA-04068 错误，该问题一般不会引起数据丢失，请您重新执行您的操作。");
-			}
-
-			logger.error("调用存储过程时发生错误", e);
 			throw new DaoException(e.getMessage());
 		} finally {
 			if (cstmt != null) {
@@ -703,7 +695,7 @@ public class CommonHibernateDao2 {
 		return cstmtMessage;
 	}
 
-	public <T> Paging<T> findPage(Paging<T> page, String hql, Object... values) {
+	public <T> Paging<T> findPage(Paging<T> page, String hql, Object[] values) {
 		Assert.notNull(page, "page不能为空");
 		String OriginalHql = hql;
 		Query q = createQuery(hql, values);
@@ -715,7 +707,7 @@ public class CommonHibernateDao2 {
 
 		setPageParameterToQuery(q, page);
 
-		List<T> result = q.list();
+		List result = q.list();
 		page.setResult(result);
 		return page;
 	}
@@ -744,7 +736,7 @@ public class CommonHibernateDao2 {
 		return query;
 	}
 
-	public <T> Paging<T> findPage(Class<T> clazz, Paging<T> page, Criterion... criterions) {
+	public <T> Paging<T> findPage(Class<T> clazz, Paging<T> page, Criterion[] criterions) {
 		Assert.notNull(page, "page不能为空");
 
 		Criteria c = createCriteria(clazz, criterions);
@@ -755,7 +747,7 @@ public class CommonHibernateDao2 {
 		}
 		setPageParameterToCriteria(c, page);
 
-		List<T> result = c.list();
+		List result = c.list();
 		page.setResult(result);
 		return page;
 	}
@@ -776,7 +768,7 @@ public class CommonHibernateDao2 {
 		return find(clazz, new Criterion[] { criterion });
 	}
 
-	public <T> List<T> find(Class<T> clazz, Criterion... criterions) {
+	public <T> List<T> find(Class<T> clazz, Criterion[] criterions) {
 		return createCriteria(clazz, criterions).list();
 	}
 
@@ -785,7 +777,7 @@ public class CommonHibernateDao2 {
 		return find(clazz, criterions);
 	}
 
-	public <T> Criteria createCriteria(Class<T> clazz, Criterion... criterions) {
+	public <T> Criteria createCriteria(Class<T> clazz, Criterion[] criterions) {
 		Criteria criteria = getSession().createCriteria(clazz);
 		for (Criterion c : criterions) {
 			criteria.add(c);
@@ -805,63 +797,66 @@ public class CommonHibernateDao2 {
 		if (null != filters) {
 			for (PropertyFilter filter : filters) {
 				Object propertyValue = filter.getMatchValue();
-				if ((null != propertyValue) && (propertyValue.toString().trim().length() != 0)) {
-
-					if (!hql.contains("where")) {
-						hql = hql + " where ";
-						hql = buildHqlDynamicCondition(hql, filter, "", conditionsValues);
-					} else if (hql.trim().endsWith("and")) {
-						hql = buildHqlDynamicCondition(hql, filter, "", conditionsValues);
-					} else {
-						hql = buildHqlDynamicCondition(hql, filter, "and", conditionsValues);
-					}
+				if (null == propertyValue)
+					continue;
+				if (propertyValue.toString().trim().length() == 0) {
+					continue;
+				}
+				if (!(hql.contains("where"))) {
+					hql = hql + " where ";
+					hql = buildHqlDynamicCondition(hql, filter, "", conditionsValues);
+				} else if (hql.trim().endsWith("and")) {
+					hql = buildHqlDynamicCondition(hql, filter, "", conditionsValues);
+				} else {
+					hql = buildHqlDynamicCondition(hql, filter, "and", conditionsValues);
 				}
 			}
+
 		}
 
 		return hql;
 	}
 
-	private String buildHqlDynamicCondition(String hql, PropertyFilter filter, String relationChar,
-			Map<String, Object> conditionsValues) {
-		String propertyName = filter.getPropertyName();
-		Object propertyValue = filter.getMatchValue();
-		conditionsValues.put(propertyName, propertyValue.toString().trim());
-		PropertyFilter.MatchType matchType = filter.getMatchType();
-		switch (matchType) {
-		case EQ:
-			hql = hql + " " + relationChar + " " + propertyName + "=:" + propertyName;
-			break;
-		case LIKE:
-			hql = hql + " " + relationChar + " " + propertyName + " like :" + propertyName;
-			conditionsValues.put(propertyName, "%" + propertyValue.toString().trim() + "%");
-			break;
-		case LE:
-			hql = hql + " " + relationChar + " " + propertyName + "<=:" + propertyName;
-			break;
-		case LT:
-			hql = hql + " " + relationChar + " " + propertyName + "<:" + propertyName;
-			break;
-		case GE:
-			hql = hql + " " + relationChar + " " + propertyName + ">=:" + propertyName;
-			break;
-		case GT:
-			hql = hql + " " + relationChar + " " + propertyName + ">:" + propertyName;
-			break;
+	private String buildHqlDynamicCondition(String hql, PropertyFilter filter, String relationChar, Map<String, Object> conditionsValues)
+  {
+    String propertyName = filter.getPropertyName();
+    Object propertyValue = filter.getMatchValue();
+    conditionsValues.put(propertyName, propertyValue.toString().trim());
+    PropertyFilter.MatchType matchType = filter.getMatchType();
+    switch (1.$SwitchMap$avicit$platform6$core$dao$PropertyFilter$MatchType[matchType.ordinal()])
+    {
+    case 1:
+      hql = hql + " " + relationChar + " " + propertyName + "=:" + propertyName;
+      break;
+    case 2:
+      hql = hql + " " + relationChar + " " + propertyName + " like :" + propertyName;
+      conditionsValues.put(propertyName, "%" + propertyValue.toString().trim() + "%");
+      break;
+    case 3:
+      hql = hql + " " + relationChar + " " + propertyName + "<=:" + propertyName;
+      break;
+    case 4:
+      hql = hql + " " + relationChar + " " + propertyName + "<:" + propertyName;
+      break;
+    case 5:
+      hql = hql + " " + relationChar + " " + propertyName + ">=:" + propertyName;
+      break;
+    case 6:
+      hql = hql + " " + relationChar + " " + propertyName + ">:" + propertyName;
+      break;
+    case 7:
+      hql = hql + " " + relationChar + " " + propertyName + " between " + ((String)propertyValue);
+    }
 
-		case BT:
-			hql = hql + " " + relationChar + " " + propertyName + " between " + (String) propertyValue;
-		}
-
-		return hql;
-	}
+    return hql;
+  }
 
 	public <T> Paging<T> findPageBySQL(Paging<T> page, String pSql, Map<String, Object> parameter) {
 		Assert.notNull(page, "page不能为空");
 		String querSql = "select * from ( " + pSql + " ) where 1=1 ";
 
-		List<PropertyFilter> filters = PropertyFilter.buildFromParameterMap(parameter);
-		HashMap<String, Object> ValueMap = new HashMap();
+		List filters = PropertyFilter.buildFromParameterMap(parameter);
+		HashMap ValueMap = new HashMap();
 		if (null != parameter) {
 			querSql = buildDynamicSql(filters, querSql, ValueMap);
 		}
@@ -884,7 +879,7 @@ public class CommonHibernateDao2 {
 			page.setTotalCount(totalCount);
 		}
 		setPageParameterToQuery(q, page);
-		List<T> result = q.list();
+		List result = q.list();
 		page.setResult(result);
 		return page;
 	}
@@ -893,12 +888,15 @@ public class CommonHibernateDao2 {
 		if (null != filters) {
 			for (PropertyFilter filter : filters) {
 				Object propertyValue = filter.getMatchValue();
-				if ((null != propertyValue) && (propertyValue.toString().trim().length() != 0)) {
-
-					pSql = buildSqlDynamicCondition(pSql, filter, "and", conditionsValues);
+				if (null == propertyValue)
+					continue;
+				if (propertyValue.toString().trim().length() == 0) {
+					continue;
 				}
+				pSql = buildSqlDynamicCondition(pSql, filter, "and", conditionsValues);
 			}
 		}
+
 		return pSql;
 	}
 
@@ -911,45 +909,44 @@ public class CommonHibernateDao2 {
 				}
 			}
 			BigDecimal bcount = (BigDecimal) query.uniqueResult();
-			return bcount.longValue();
+			long totalCount = bcount.longValue();
+			return totalCount;
 		} catch (Exception e) {
 			throw new RuntimeException("hql can't be auto count, hql is:" + pSql, e);
 		}
 	}
 
-	private String buildSqlDynamicCondition(String hql, PropertyFilter filter, String relationChar,
-			Map<String, Object> conditionsValues) {
-		String propertyName = filter.getPropertyName();
-		Object propertyValue = filter.getMatchValue();
-		conditionsValues.put(propertyName, propertyValue.toString().trim());
-		PropertyFilter.MatchType matchType = filter.getMatchType();
-		switch (matchType) {
-		case EQ:
-			hql = hql + " " + relationChar + " " + propertyName + "=:" + propertyName;
-			break;
-		case LIKE:
-			hql = hql + " " + relationChar + " " + propertyName + " like :" + propertyName;
-			conditionsValues.put(propertyName, "%" + propertyValue.toString().trim() + "%");
-			break;
-		case LE:
-			hql = hql + " " + relationChar + " " + propertyName + "<=:" + propertyName;
-			break;
-		case LT:
-			hql = hql + " " + relationChar + " " + propertyName + "<:" + propertyName;
-			break;
-		case GE:
-			hql = hql + " " + relationChar + " " + propertyName + ">=:" + propertyName;
-			break;
-		case GT:
-			hql = hql + " " + relationChar + " " + propertyName + ">:" + propertyName;
-			break;
+	private String buildSqlDynamicCondition(String hql, PropertyFilter filter, String relationChar, Map<String, Object> conditionsValues) {
+    String propertyName = filter.getPropertyName();
+    Object propertyValue = filter.getMatchValue();
+    conditionsValues.put(propertyName, propertyValue.toString().trim());
+    PropertyFilter.MatchType matchType = filter.getMatchType();
+    switch (1.$SwitchMap$avicit$platform6$core$dao$PropertyFilter$MatchType[matchType.ordinal()])
+    {
+    case 1:
+      hql = hql + " " + relationChar + " " + propertyName + "=:" + propertyName;
+      break;
+    case 2:
+      hql = hql + " " + relationChar + " " + propertyName + " like :" + propertyName;
+      conditionsValues.put(propertyName, "%" + propertyValue.toString().trim() + "%");
+      break;
+    case 3:
+      hql = hql + " " + relationChar + " " + propertyName + "<=:" + propertyName;
+      break;
+    case 4:
+      hql = hql + " " + relationChar + " " + propertyName + "<:" + propertyName;
+      break;
+    case 5:
+      hql = hql + " " + relationChar + " " + propertyName + ">=:" + propertyName;
+      break;
+    case 6:
+      hql = hql + " " + relationChar + " " + propertyName + ">:" + propertyName;
+      break;
+    case 7:
+      hql = hql + " " + relationChar + " " + propertyName + " between " + ((String)propertyValue);
+    }
 
-		case BT:
-			hql = hql + " " + relationChar + " " + propertyName + " between " + (String) propertyValue;
-		}
-
-		return hql;
-	}
+    return hql; }
 
 	public List<Map> findListMapBySQL(String sql) {
 		SQLQuery sqlquery = getSession().createSQLQuery(sql);

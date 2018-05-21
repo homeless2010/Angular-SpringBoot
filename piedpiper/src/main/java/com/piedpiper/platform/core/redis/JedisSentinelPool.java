@@ -175,7 +175,7 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
                 jedis.disconnect();
 
                 if (jedis == null) break label376;
-                jedis.close(); break label376
+                jedis.close(); break label376;
               }
             }
           }

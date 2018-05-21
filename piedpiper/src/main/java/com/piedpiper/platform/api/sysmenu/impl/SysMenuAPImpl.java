@@ -130,7 +130,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 
 	public List<List<LayoutModel>> getAllLayoutModelList() {
 		return this.baseCacheManager.getAllFromCacheByOrder("PLATFORM6_PORTLETFILE", new TypeReference() {
-		}, new Comparator() {
+		}, new Comparator<List<LayoutModel>>() {
 			public int compare(List<LayoutModel> o1, List<LayoutModel> o2) {
 				int int1 = Integer.parseInt(((LayoutModel) o1.get(0)).getLayoutId().substring(6));
 				int int2 = Integer.parseInt(((LayoutModel) o2.get(0)).getLayoutId().substring(6));
@@ -204,14 +204,14 @@ public class SysMenuAPImpl implements SysMenuAPI {
 			parentId = "-1";
 		}
 
-		List menuAccessList = null;
+		List<SysAccesscontrol> menuAccessList = null;
 		if ((StringUtils.isNotBlank(targetType)) && (StringUtils.isNotBlank(targetId))) {
 			menuAccessList = getMenusAccesscontrol(targetType, targetId);
 		}
 
 		--level;
 
-		List listMap = getSubSysMenus(parentId, applicationId);
+		List<SysMenu> listMap = getSubSysMenus(parentId, applicationId);
 		List resultListMap = new ArrayList();
 
 		if ((null == listMap) || (0 == listMap.size()))
@@ -272,8 +272,9 @@ public class SysMenuAPImpl implements SysMenuAPI {
 	}
 
 	public List<SysAccesscontrol> getMenusAccesscontrol(String targetType, String targetId) {
-		List list = this.baseCacheManager.getAllFromCache(new StringBuilder().append("PLATFORM6_ACCESSCONTROL_TYPE_ID_")
-				.append(targetType).append("_").append(targetId).toString(), new TypeReference() {
+		List<SysAccesscontrol> list = this.baseCacheManager.getAllFromCache(new StringBuilder()
+				.append("PLATFORM6_ACCESSCONTROL_TYPE_ID_").append(targetType).append("_").append(targetId).toString(),
+				new TypeReference() {
 				});
 		for (SysAccesscontrol sysAccesscontrol : list) {
 			SysResource sysResource = (SysResource) this.baseCacheManager.getObjectFromCache("PLATFORM6_SYSRESOURCE",
@@ -437,7 +438,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 
 				sBuffer.append("<table cellpadding='0' cellspacing='0' height='100%' width='100%'>");
 
-				List sysMenuVoListNew = (List) list.get(i);
+				List<SysMenuVo> sysMenuVoListNew = (List) list.get(i);
 
 				for (SysMenuVo sysMenuVo : sysMenuVoListNew) {
 					if ("1".equals(sysMenuVo.getType())) {
@@ -446,13 +447,13 @@ public class SysMenuAPImpl implements SysMenuAPI {
 							String[] icons1 = getSystemmIconPara(sysMenuVo.getImage(), defaultImage, showTabIcon);
 							sBuffer.append(String.format(
 									"<li class='dc-mega-li'><a class='pop-dc-mega' href='javascript:void(0)' style='display:block;' onclick=\"addTab('%s','%s','%s','%s','%s');return false;\"%s>%s</a></li></td></tr>",
-									new Object[]{sysMenuVo.getName(),
+									new Object[] { sysMenuVo.getName(),
 											(sysMenuVo.getUrl() == null) ? "" : sysMenuVo.getUrl(), icons1[0],
 											(sysMenuVo.getCode() == null) ? "" : sysMenuVo.getCode(), icons1[1],
 											setIconTitleTips(sysMenuVo, iconTipsFlag, appId), getIconImageUrl(sysMenuVo,
-													defaultImage, showTabIcon, showDivIcon, appId)}));
+													defaultImage, showTabIcon, showDivIcon, appId) }));
 
-							Collection sysMenuVoListChildSecond = menu.getMenusByParentId(sysMenuVo.getId());
+							Collection<SysMenuVo> sysMenuVoListChildSecond = menu.getMenusByParentId(sysMenuVo.getId());
 							if (sysMenuVoListChildSecond != null) {
 								for (SysMenuVo sysMenuVoChildSecond : sysMenuVoListChildSecond) {
 									if ("1".equals(sysMenuVoChildSecond.getType())) {
@@ -460,18 +461,16 @@ public class SysMenuAPImpl implements SysMenuAPI {
 												defaultImage, showTabIcon);
 										sBuffer.append(String.format(
 												"<tr><td valign='top' height='20' width=100%%><li><ul><a class ='subMenuStyle' href='javascript:void(0)' onclick=\"addTab('%s','%s','%s','%s','%s');return false;\"%s>%s</a></ul></li></td></tr>",
-												new Object[]{sysMenuVoChildSecond.getName(),
-														(sysMenuVoChildSecond.getUrl() == null)
-																? ""
+												new Object[] { sysMenuVoChildSecond.getName(),
+														(sysMenuVoChildSecond.getUrl() == null) ? ""
 																: sysMenuVoChildSecond.getUrl(),
 														icons[0],
-														(sysMenuVoChildSecond.getCode() == null)
-																? ""
+														(sysMenuVoChildSecond.getCode() == null) ? ""
 																: sysMenuVoChildSecond.getCode(),
 														icons[1],
 														setIconTitleTips(sysMenuVoChildSecond, iconTipsFlag, appId),
 														getIconImageUrl(sysMenuVoChildSecond, defaultImage, showTabIcon,
-																showDivIcon, appId)}));
+																showDivIcon, appId) }));
 									}
 
 								}
@@ -482,11 +481,11 @@ public class SysMenuAPImpl implements SysMenuAPI {
 							String[] icons2 = getSystemmIconPara(sysMenuVo.getImage(), defaultImage, showTabIcon);
 							sBuffer.append(String.format(
 									"<li class='dc-mega-li'><a class='pop-dc-mega' href='javascript:void(0)' style='display:block;' onclick=\"addTab('%s','%s','%s','%s','%s');return false;\"%s>%s</a></li></td></tr>",
-									new Object[]{sysMenuVo.getName(),
+									new Object[] { sysMenuVo.getName(),
 											(sysMenuVo.getUrl() == null) ? "" : sysMenuVo.getUrl(), icons2[0],
 											(sysMenuVo.getCode() == null) ? "" : sysMenuVo.getCode(), icons2[1],
 											setIconTitleTips(sysMenuVo, iconTipsFlag, appId), getIconImageUrl(sysMenuVo,
-													defaultImage, showTabIcon, showDivIcon, appId)}));
+													defaultImage, showTabIcon, showDivIcon, appId) }));
 						}
 
 					}
@@ -502,7 +501,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 	}
 
 	private String getIndexElementForPortal(String currentLanguagecode, SecurityMenu menu, String appId) {
-		Collection sysMenuVoList = menu.getMenusByParentId("-1");
+		Collection<SysMenuVo> sysMenuVoList = menu.getMenusByParentId("-1");
 		String showTabIcon = getProfileValueByCode("PLATFORM_V6_DISPLAY_TAB_ICON", appId);
 		String iconTipsFlag = getProfileValueByCode("PLATFORM_V6_DISPLAY_ICON_TIPS", appId);
 		String showDivIcon = getProfileValueByCode("PLATFORM_V6_DISPLAY_DIV_ICON", appId);
@@ -514,15 +513,15 @@ public class SysMenuAPImpl implements SysMenuAPI {
 			if (sysMenuVo.getHasChild().booleanValue()) {
 				sBuffer.append(String.format(
 						"<li class='dc-mega-li'><a class='dc-mega' href='javascript:void(0)' style='display:block;' onclick='return false;'>%s</a>%s",
-						new Object[]{sysMenuVo.getName(), getEachColElementForPortal(defaultImage, sysMenuVo.getId(),
-								showTabIcon, iconTipsFlag, showDivIcon, currentLanguagecode, appId, menu)}));
+						new Object[] { sysMenuVo.getName(), getEachColElementForPortal(defaultImage, sysMenuVo.getId(),
+								showTabIcon, iconTipsFlag, showDivIcon, currentLanguagecode, appId, menu) }));
 			} else {
 				String[] icons = getSystemmIconPara(sysMenuVo.getImage(), defaultImage, showTabIcon);
 				sBuffer.append(String.format(
 						"<li class='dc-mega-li'><a class='dc-mega' href='javascript:void(0)' style='display:block;'onclick=\"addTab('%s','%s','%s','%s','%s');return false;\">%s</a></li>",
-						new Object[]{sysMenuVo.getName(), (sysMenuVo.getUrl() == null) ? "" : sysMenuVo.getUrl(),
+						new Object[] { sysMenuVo.getName(), (sysMenuVo.getUrl() == null) ? "" : sysMenuVo.getUrl(),
 								icons[0], (sysMenuVo.getCode() == null) ? "" : sysMenuVo.getCode(), icons[1],
-								formatIconName(sysMenuVo.getName())}));
+								formatIconName(sysMenuVo.getName()) }));
 			}
 
 		}
@@ -544,7 +543,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 		String defaultImage = getProfileValueByCode("PLATFORM_V6_DEFAULT_ICON_IMAGE", appId);
 
 		List rootList = getSubSysMenus("-1", appId);
-		Collection sysMenuVoList = new ArrayList();
+		Collection<SysMenuVo> sysMenuVoList = new ArrayList();
 		if (rootList.size() > 0) {
 			sysMenuVoList = menu.getMenusByParentId(((SysMenu) rootList.get(0)).getId());
 		} else {
@@ -559,17 +558,17 @@ public class SysMenuAPImpl implements SysMenuAPI {
 				if (sysMenuVo.getHasChild().booleanValue()) {
 					sBuffer.append(String
 							.format("<li class='dc-mega-li'><a class='dc-mega' href='javascript:void(0)' style='display:block;' onclick='return false;'>%s</a>%s",
-									new Object[]{sysMenuVo.getName(),
+									new Object[] { sysMenuVo.getName(),
 											getEachColElement(defaultImage, sysMenuVo.getId(), showTabIcon,
 													iconTipsFlag, showDivIcon, currentLanguagecode, loginUser, appId,
-													menu)}));
+													menu) }));
 				} else {
 					String[] icons = getSystemmIconPara(sysMenuVo.getImage(), defaultImage, showTabIcon);
 					sBuffer.append(String.format(
 							"<li class='dc-mega-li'><a class='dc-mega' href='javascript:void(0)' style='display:block;'onclick=\"addTab('%s','%s','%s','%s','%s');return false;\">%s</a></li>",
-							new Object[]{sysMenuVo.getName(), (sysMenuVo.getUrl() == null) ? "" : sysMenuVo.getUrl(),
+							new Object[] { sysMenuVo.getName(), (sysMenuVo.getUrl() == null) ? "" : sysMenuVo.getUrl(),
 									icons[0], (sysMenuVo.getCode() == null) ? "" : sysMenuVo.getCode(), icons[1],
-									formatIconName(sysMenuVo.getName())}));
+									formatIconName(sysMenuVo.getName()) }));
 				}
 
 			}
@@ -604,7 +603,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 
 				sBuffer.append("<table cellpadding='0' cellspacing='0' height='100%' width='100%'>");
 
-				List sysMenuVoListNew = (List) list.get(i);
+				List<SysMenuVo> sysMenuVoListNew = (List) list.get(i);
 
 				for (SysMenuVo sysMenuVo : sysMenuVoListNew) {
 					if ("1".equals(sysMenuVo.getType())) {
@@ -613,13 +612,13 @@ public class SysMenuAPImpl implements SysMenuAPI {
 							String[] icons1 = getSystemmIconPara(sysMenuVo.getImage(), defaultImage, showTabIcon);
 							sBuffer.append(String.format(
 									"<li class='dc-mega-li'><a class='pop-dc-mega' href='javascript:void(0)' style='display:block;' onclick=\"addTab('%s','%s','%s','%s','%s');return false;\"%s>%s</a></li></td></tr>",
-									new Object[]{sysMenuVo.getName(),
+									new Object[] { sysMenuVo.getName(),
 											(sysMenuVo.getUrl() == null) ? "" : sysMenuVo.getUrl(), icons1[0],
 											(sysMenuVo.getCode() == null) ? "" : sysMenuVo.getCode(), icons1[1],
 											setIconTitleTips(sysMenuVo, iconTipsFlag, appId), getIconImageUrl(sysMenuVo,
-													defaultImage, showTabIcon, showDivIcon, appId)}));
+													defaultImage, showTabIcon, showDivIcon, appId) }));
 
-							Collection sysMenuVoListChildSecond = menu.getMenusByParentId(sysMenuVo.getId());
+							Collection<SysMenuVo> sysMenuVoListChildSecond = menu.getMenusByParentId(sysMenuVo.getId());
 							if (sysMenuVoListChildSecond != null) {
 								for (SysMenuVo sysMenuVoChildSecond : sysMenuVoListChildSecond) {
 									if ("1".equals(sysMenuVoChildSecond.getType())) {
@@ -627,18 +626,16 @@ public class SysMenuAPImpl implements SysMenuAPI {
 												defaultImage, showTabIcon);
 										sBuffer.append(String.format(
 												"<tr><td valign='top' height='20' width=100%%><li><ul><a class ='subMenuStyle' href='javascript:void(0)' onclick=\"addTab('%s','%s','%s','%s','%s');return false;\"%s>%s</a></ul></li></td></tr>",
-												new Object[]{sysMenuVoChildSecond.getName(),
-														(sysMenuVoChildSecond.getUrl() == null)
-																? ""
+												new Object[] { sysMenuVoChildSecond.getName(),
+														(sysMenuVoChildSecond.getUrl() == null) ? ""
 																: sysMenuVoChildSecond.getUrl(),
 														icons[0],
-														(sysMenuVoChildSecond.getCode() == null)
-																? ""
+														(sysMenuVoChildSecond.getCode() == null) ? ""
 																: sysMenuVoChildSecond.getCode(),
 														icons[1],
 														setIconTitleTips(sysMenuVoChildSecond, iconTipsFlag, appId),
 														getIconImageUrl(sysMenuVoChildSecond, defaultImage, showTabIcon,
-																showDivIcon, appId)}));
+																showDivIcon, appId) }));
 									}
 
 								}
@@ -649,11 +646,11 @@ public class SysMenuAPImpl implements SysMenuAPI {
 							String[] icons2 = getSystemmIconPara(sysMenuVo.getImage(), defaultImage, showTabIcon);
 							sBuffer.append(String.format(
 									"<li class='dc-mega-li'><a class='pop-dc-mega' href='javascript:void(0)' style='display:block;' onclick=\"addTab('%s','%s','%s','%s','%s');return false;\"%s>%s</a></li></td></tr>",
-									new Object[]{sysMenuVo.getName(),
+									new Object[] { sysMenuVo.getName(),
 											(sysMenuVo.getUrl() == null) ? "" : sysMenuVo.getUrl(), icons2[0],
 											(sysMenuVo.getCode() == null) ? "" : sysMenuVo.getCode(), icons2[1],
 											setIconTitleTips(sysMenuVo, iconTipsFlag, appId), getIconImageUrl(sysMenuVo,
-													defaultImage, showTabIcon, showDivIcon, appId)}));
+													defaultImage, showTabIcon, showDivIcon, appId) }));
 						}
 
 					}
@@ -671,7 +668,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 	private String setIconTitleTips(SysMenuVo sysMenuVo, String iconTipsFlag, String appId) {
 		if ((iconTipsFlag != null) && (Boolean.valueOf(iconTipsFlag).booleanValue())) {
 			return String.format("title='%s'",
-					new Object[]{setHrefTitleTips(sysMenuVo.getName(), sysMenuVo.getComments(), appId)});
+					new Object[] { setHrefTitleTips(sysMenuVo.getName(), sysMenuVo.getComments(), appId) });
 		}
 		return "";
 	}
@@ -699,13 +696,13 @@ public class SysMenuAPImpl implements SysMenuAPI {
 			String[] icons = getSystemmIconPara(sysMenuvo.getImage(), defaultIconImage, showTabIcon);
 			sBuffer.append(String.format(
 					"<span class='icon' style='background-image:url(%s);background-position:%s;background-repeat:no-repeat no-repeat;display:block;float:left;with:16px;height:16px;'></span>",
-					new Object[]{icons[0], icons[1]}));
+					new Object[] { icons[0], icons[1] }));
 			if (hasUrlFlag)
 				sBuffer.append(String.format("<span style='*float:left;line-height:16px;cursor:pointer;'>%s</span>",
-						new Object[]{formatIconName(sysMenuvo.getName())}));
+						new Object[] { formatIconName(sysMenuvo.getName()) }));
 			else
 				sBuffer.append(String.format("<span style='*float:left;line-height:16px;'>%s</span>",
-						new Object[]{formatIconName(sysMenuvo.getName())}));
+						new Object[] { formatIconName(sysMenuvo.getName()) }));
 		} else {
 			if ((sysMenuvo.getHasChild() != null) && (sysMenuvo.getHasChild().booleanValue()))
 				sBuffer.append(new StringBuilder().append("<img src='")
@@ -869,7 +866,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 	public void deleteMenu(String id) {
 		String url = new StringBuilder().append(RestClientConfig.getRestHost("sysmenu"))
 				.append("/api/platform6/sysmenu/SysMenu/deletemenu/v1").toString();
-		ResponseMsg responseMsg = RestClient.doPost(url, new String[]{id}, new GenericType() {
+		ResponseMsg responseMsg = RestClient.doPost(url, new String[] { id }, new GenericType() {
 		});
 		if (responseMsg.getRetCode().equals("200")) {
 			return;
@@ -884,7 +881,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 
 		String defaultImage = getProfileValueByCode("PLATFORM_V6_DEFAULT_ICON_IMAGE", appId);
 
-		Collection sysMenuVoList = menu.getMenusByParentId("-1");
+		Collection<SysMenuVo> sysMenuVoList = menu.getMenusByParentId("-1");
 
 		StringBuilder sBuffer = new StringBuilder();
 
@@ -945,7 +942,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 		String defaultImage = getProfileValueByCode("PLATFORM_V6_DEFAULT_ICON_IMAGE", appId);
 
 		List rootList = getSubSysMenus("-1", appId);
-		Collection sysMenuVoList = menu.getMenusByParentId(((SysMenu) rootList.get(0)).getId());
+		Collection<SysMenuVo> sysMenuVoList = menu.getMenusByParentId(((SysMenu) rootList.get(0)).getId());
 
 		StringBuilder sBuffer = new StringBuilder();
 
@@ -1067,7 +1064,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 
 		String defaultImage = getProfileValueByCode("PLATFORM_V6_DEFAULT_ICON_IMAGE", appId);
 
-		Collection sysMenuVoList = menu.getMenusByParentId("-1");
+		Collection<SysMenuVo> sysMenuVoList = menu.getMenusByParentId("-1");
 
 		StringBuilder sBuffer = new StringBuilder();
 
@@ -1126,7 +1123,7 @@ public class SysMenuAPImpl implements SysMenuAPI {
 		String defaultImage = getProfileValueByCode("PLATFORM_V6_DEFAULT_ICON_IMAGE", appId);
 
 		List rootList = getSubSysMenus("-1", appId);
-		Collection sysMenuVoList = menu.getMenusByParentId(((SysMenu) rootList.get(0)).getId());
+		Collection<SysMenuVo> sysMenuVoList = menu.getMenusByParentId(((SysMenu) rootList.get(0)).getId());
 
 		StringBuilder sBuffer = new StringBuilder();
 

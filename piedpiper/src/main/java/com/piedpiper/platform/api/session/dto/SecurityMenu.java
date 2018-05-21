@@ -50,7 +50,7 @@ public class SecurityMenu implements Serializable {
 					tm.add(s_menu);
 				}
 			}
-			Collections.sort(tm, new Comparator() {
+			Collections.sort(tm, new Comparator<SysMenuVo>() {
 				public int compare(SysMenuVo arg0, SysMenuVo arg1) {
 					return arg0.compareTo(arg1);
 				}
@@ -108,7 +108,7 @@ public class SecurityMenu implements Serializable {
 				}
 			}
 
-			Comparator<SysMenuVo> com = new Comparator() {
+			Comparator<SysMenuVo> com = new Comparator<SysMenuVo>() {
 				public int compare(SysMenuVo arg0, SysMenuVo arg1) {
 					return arg0.compareTo(arg1);
 				}

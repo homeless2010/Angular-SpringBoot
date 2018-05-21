@@ -10,35 +10,36 @@ import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public class JsonUtil {
-	public static List<Map<String, Object>> parseJSON2List(String jsonStr)
-   {
-     if ((jsonStr == null) || (jsonStr.equals(""))) {
-       return null;
-     }
-     try {
-       (List)JsonHelper.getInstance().readValue(jsonStr, new TypeReference() {});
-     } catch (Exception e) {
-       e.printStackTrace(); }
-     return null;
-   }
+	public static List<Map<String, Object>> parseJSON2List(String jsonStr) {
+		if ((jsonStr == null) || (jsonStr.equals("")))
+			return null;
+		try {
+			return ((List) JsonHelper.getInstance().readValue(jsonStr, new TypeReference() {
+			}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-	public static Map<String, Object> parseJSON2Map(String jsonStr)
-   {
-     if ((jsonStr == null) || (jsonStr.equals(""))) {
-       return null;
-     }
-     try {
-       (Map)JsonHelper.getInstance().readValue(jsonStr, new TypeReference() {});
-     } catch (Exception e) {
-       e.printStackTrace(); }
-     return null;
-   }
+	public static Map<String, Object> parseJSON2Map(String jsonStr) {
+		if ((jsonStr == null) || (jsonStr.equals("")))
+			return null;
+		try {
+			return ((Map) JsonHelper.getInstance().readValue(jsonStr, new TypeReference() {
+			}));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static List<Map<String, Object>> getListByUrl(String url) {
 		try {
 			InputStream in = new URL(url).openStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 			StringBuilder sb = new StringBuilder();
+
 			String line;
 			while ((line = reader.readLine()) != null) {
 				sb.append(line);
