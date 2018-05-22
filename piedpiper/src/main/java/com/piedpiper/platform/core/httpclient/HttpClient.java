@@ -42,6 +42,7 @@ public class HttpClient {
 
 	public static void doSSL() {
 		CloseableHttpClient httpclient = null;
+		SSLContext sslcontext = null;
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 			FileInputStream instream = new FileInputStream(new File("d:\\tomcat.keystore"));
@@ -53,8 +54,7 @@ public class HttpClient {
 				} catch (Exception ignore) {
 				}
 
-				SSLContexts sslcontext = SSLContexts.custom()
-						.loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
+				sslcontext = SSLContexts.custom().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
 			} catch (CertificateException e) {
 				logger.error(e.getMessage(), e);
 			} finally {
@@ -63,8 +63,6 @@ public class HttpClient {
 				} catch (Exception ignore) {
 				}
 			}
-
-			SSLContext sslcontext;
 
 			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext, new String[] { "TLSv1" },
 					null, SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
@@ -145,7 +143,7 @@ public class HttpClient {
 	}
 
 	public static <T> T doPost(String url, Map<String, String> data, Class<T> c) {
-		t = null;
+		T t = null;
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 
 		HttpPost httppost = new HttpPost(url);
@@ -188,10 +186,11 @@ public class HttpClient {
 				logger.error(e.getMessage(), e);
 			}
 		}
+		return t;
 	}
 
 	public static <T> T doPost(String url, Map<String, String> data, TypeReference<T> c) {
-		t = null;
+		T t = null;
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 
 		HttpPost httppost = new HttpPost(url);
@@ -236,7 +235,7 @@ public class HttpClient {
 	}
 
 	public static <T> T doGet(String Url, Class<T> c) {
-		t = null;
+		T t = null;
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
 			HttpGet httpget = new HttpGet(Url);
@@ -271,5 +270,6 @@ public class HttpClient {
 				logger.error(e.getMessage(), e);
 			}
 		}
+		return t;
 	}
 }

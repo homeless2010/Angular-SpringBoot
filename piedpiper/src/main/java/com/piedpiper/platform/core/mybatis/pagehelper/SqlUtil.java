@@ -1,21 +1,17 @@
 package com.piedpiper.platform.core.mybatis.pagehelper;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.MappedStatement.Builder;
 import org.apache.ibatis.mapping.ParameterMapping;
-import org.apache.ibatis.mapping.ParameterMapping.Builder;
 import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMap.Builder;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.reflection.MetaObject;
@@ -28,24 +24,16 @@ import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
 import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.type.TypeHandlerRegistry;
 
 public class SqlUtil {
 	private static final List<ResultMapping> EMPTY_RESULTMAPPING = new ArrayList(0);
-
 	private static final String SUFFIX_PAGE = "_PageHelper";
-
 	private static final String SUFFIX_COUNT = "_PageHelper_Count";
-
 	private static final String PAGEPARAMETER_FIRST = "First_PageHelper";
-
 	private static final String PAGEPARAMETER_SECOND = "Second_PageHelper";
-
 	private static final String PROVIDER_OBJECT = "_provider_object";
-
 	private static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
 	private static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
-
 	private Parser sqlParser;
 
 	private static MetaObject forObject(Object object) {
@@ -54,9 +42,6 @@ public class SqlUtil {
 
 	public static enum Dialect {
 		mysql, mariadb, sqlite, oracle, hsqldb, postgresql;
-
-		private Dialect() {
-		}
 	}
 
 	public SqlUtil(String strDialect) {
@@ -72,7 +57,6 @@ public class SqlUtil {
 						.newInstance(new Object[] { dialect }));
 			} catch (Exception e) {
 			}
-
 			if (this.sqlParser == null) {
 				this.sqlParser = SimpleParser.newParser(dialect);
 			}
@@ -116,27 +100,28 @@ public class SqlUtil {
 	}
 
 	public static abstract class SimpleParser implements SqlUtil.Parser {
-		public static SqlUtil.Parser newParser(SqlUtil.Dialect dialect)
-     {
-       SqlUtil.Parser parser = null;
-       switch (SqlUtil.1.$SwitchMap$com.piedpiper.platform.core$mybatis$pagehelper$SqlUtil$Dialect[dialect.ordinal()]) {
-       case 1: 
-       case 2: 
-       case 3: 
-         parser = new SqlUtil.MysqlParser();
-         break;
-       case 4: 
-         parser = new SqlUtil.OracleParser();
-         break;
-       case 5: 
-         parser = new SqlUtil.HsqldbParser();
-         break;
-       case 6: 
-       default: 
-         parser = new SqlUtil.PostgreSQLParser();
-       }
-       return parser;
-     }
+	public static SqlUtil.Parser newParser(SqlUtil.Dialect dialect)
+    {
+      SqlUtil.Parser parser = null;
+      switch (dialect)
+      {
+      case mysql: 
+        parser = new SqlUtil.MysqlParser();
+        break;
+      case oracle: 
+        parser = new SqlUtil.OracleParser();
+        break;
+      case hsqldb: 
+        parser = new SqlUtil.HsqldbParser();
+        break;
+      case postgresql: 
+    	  parser = new SqlUtil.PostgreSQLParser();
+    	  break;
+      default: 
+        parser = new SqlUtil.PostgreSQLParser();
+      }
+      return parser;
+    }
 
 		public void isSupportedSql(String sql) {
 			if (sql.trim().toUpperCase().endsWith("FOR UPDATE")) {
@@ -169,7 +154,6 @@ public class SqlUtil {
 				hasTypeHandler = ms.getConfiguration().getTypeHandlerRegistry()
 						.hasTypeHandler(parameterObject.getClass());
 				metaObject = SqlUtil.forObject(parameterObject);
-
 				if ((ms.getSqlSource() instanceof SqlUtil.MyProviderSqlSource)) {
 					paramMap.put("_provider_object", parameterObject);
 				}
@@ -178,13 +162,11 @@ public class SqlUtil {
 						paramMap.put(name, metaObject.getValue(name));
 					}
 				}
-
 				if ((boundSql.getParameterMappings() != null) && (boundSql.getParameterMappings().size() > 0)) {
 					for (ParameterMapping parameterMapping : boundSql.getParameterMappings()) {
 						String name = parameterMapping.getProperty();
 						if ((!name.equals("First_PageHelper")) && (!name.equals("Second_PageHelper"))
 								&& (paramMap.get(name) == null)) {
-
 							if ((hasTypeHandler)
 									|| (parameterMapping.getJavaType().equals(parameterObject.getClass()))) {
 								paramMap.put(name, parameterObject);
@@ -266,9 +248,7 @@ public class SqlUtil {
 
 	private class MyDynamicSqlSource implements SqlSource {
 		private Configuration configuration;
-
 		private SqlNode rootSqlNode;
-
 		private Boolean count;
 
 		public MyDynamicSqlSource(Configuration configuration, SqlNode rootSqlNode, Boolean count) {
@@ -289,7 +269,6 @@ public class SqlUtil {
 				sqlSource = SqlUtil.this.getPageSqlSource(this.configuration, sqlSource, parameterObject);
 			}
 			BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
-
 			for (Map.Entry<String, Object> entry : context.getBindings().entrySet()) {
 				boundSql.setAdditionalParameter((String) entry.getKey(), entry.getValue());
 			}
@@ -299,9 +278,7 @@ public class SqlUtil {
 
 	private class MyProviderSqlSource implements SqlSource {
 		private Configuration configuration;
-
 		private ProviderSqlSource providerSqlSource;
-
 		private Boolean count;
 
 		private MyProviderSqlSource(Configuration configuration, ProviderSqlSource providerSqlSource, Boolean count) {
@@ -321,7 +298,6 @@ public class SqlUtil {
 				return new BoundSql(this.configuration, SqlUtil.this.sqlParser.getCountSql(boundSql.getSql()),
 						boundSql.getParameterMappings(), parameterObject);
 			}
-
 			return new BoundSql(this.configuration, SqlUtil.this.sqlParser.getPageSql(boundSql.getSql()),
 					SqlUtil.this.getPageParameterMapping(this.configuration, boundSql), parameterObject);
 		}
@@ -334,7 +310,6 @@ public class SqlUtil {
 			qs = ms.getConfiguration().getMappedStatement(ms.getId() + suffix);
 		} catch (Exception e) {
 		}
-
 		if (qs == null) {
 			qs = newMappedStatement(ms, getsqlSource(ms, sqlSource, parameterObject, suffix), suffix);
 			try {
@@ -342,7 +317,6 @@ public class SqlUtil {
 			} catch (Exception e) {
 			}
 		}
-
 		return qs;
 	}
 
@@ -402,13 +376,11 @@ public class SqlUtil {
 		}
 		if ((sqlSource instanceof ProviderSqlSource)) {
 			return new MyProviderSqlSource(ms.getConfiguration(), (ProviderSqlSource) sqlSource,
-					Boolean.valueOf(suffix == "_PageHelper_Count"), null);
+					Boolean.valueOf(suffix == "_PageHelper_Count"));
 		}
-
 		if (suffix == "_PageHelper") {
 			return getPageSqlSource(ms.getConfiguration(), sqlSource, parameterObject);
 		}
-
 		return getCountSqlSource(ms.getConfiguration(), sqlSource, parameterObject);
 	}
 

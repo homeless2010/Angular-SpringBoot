@@ -27,7 +27,7 @@ import redis.clients.util.Pool;
 
 public class JedisSentinelPool extends Pool<ShardedJedis> {
 	public static final int MAX_RETRY_SENTINEL = 10;
-	protected final Logger log;
+	protected final Logger log = LoggerFactory.getLogger(getClass().getName());
 	protected GenericObjectPoolConfig poolConfig;
 	protected int timeout;
 	private int sentinelRetry;
@@ -65,8 +65,6 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 
 	public JedisSentinelPool(List<String> masters, Set<String> sentinels, GenericObjectPoolConfig poolConfig,
 			int timeout, String password, int database) {
-		this.log = LoggerFactory.getLogger(super.getClass().getName());
-
 		this.timeout = 2000;
 
 		this.sentinelRetry = 0;
@@ -144,84 +142,76 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 		return shardMasters;
 	}
 
-	private List<HostAndPort> initSentinels(Set<String> sentinels, List<String> masters)
-  {
-    Map masterMap = new HashMap();
-    List shardMasters = new ArrayList();
+	private List<HostAndPort> initSentinels(Set<String> sentinels, List<String> masters) {
+		Map<String, HostAndPort> masterMap = new HashMap();
+		List<HostAndPort> shardMasters = new ArrayList();
 
-    this.log.info("Trying to find all master from available Sentinels...");
+		this.log.info("Trying to find all master from available Sentinels...");
+		for (String masterName : masters) {
+			HostAndPort master = null;
+			boolean fetched = false;
+			while ((!fetched) && (this.sentinelRetry < 10)) {
+				for (String sentinel : sentinels) {
+					HostAndPort hap = toHostAndPort(Arrays.asList(sentinel.split(":")));
 
-    for (String masterName : masters) {
-      HostAndPort master = null;
-      boolean fetched = false;
+					this.log.info("Connecting to Sentinel " + hap);
+					Jedis jedis = null;
+					try {
+						jedis = new Jedis(hap.getHost(), hap.getPort());
+						master = (HostAndPort) masterMap.get(masterName);
+						if (master == null) {
+							List<String> hostAndPort = jedis.sentinelGetMasterAddrByName(masterName);
+							if ((hostAndPort != null) && (hostAndPort.size() > 0)) {
+								master = toHostAndPort(hostAndPort);
+								this.log.info("Found Redis master at " + master);
+								shardMasters.add(master);
+								masterMap.put(masterName, master);
+								fetched = true;
+								jedis.disconnect();
+								if (jedis == null) {
+									break;
+								}
+								jedis.close();
+								break;
+							}
+						}
+					} catch (JedisConnectionException e) {
+						this.log.warn("Cannot connect to sentinel running @ " + hap + ". Trying next one.");
+					} finally {
+						if (jedis != null) {
+							jedis.close();
+						}
+					}
+				}
+				if (null == master) {
+					try {
+						this.log.error("All sentinels down, cannot determine where is " + masterName
+								+ " master is running... sleeping 1000ms, Will try again.");
 
-      while ((!(fetched)) && (this.sentinelRetry < 10)) {
-        for (String sentinel : sentinels) {
-          HostAndPort hap = toHostAndPort(Arrays.asList(sentinel.split(":")));
-
-          this.log.info("Connecting to Sentinel " + hap);
-          Jedis jedis = null;
-          try {
-            jedis = new Jedis(hap.getHost(), hap.getPort());
-            master = (HostAndPort)masterMap.get(masterName);
-            if (master == null) {
-              List hostAndPort = jedis.sentinelGetMasterAddrByName(masterName);
-              if ((hostAndPort != null) && (hostAndPort.size() > 0)) {
-                master = toHostAndPort(hostAndPort);
-                this.log.info("Found Redis master at " + master);
-                shardMasters.add(master);
-                masterMap.put(masterName, master);
-                fetched = true;
-                jedis.disconnect();
-
-                if (jedis == null) break label376;
-                jedis.close(); break label376;
-              }
-            }
-          }
-          catch (JedisConnectionException e)
-          {
-            this.log.warn("Cannot connect to sentinel running @ " + hap + ". Trying next one.");
-          } finally {
-            if (jedis != null) {
-              jedis.close();
-            }
-          }
-
-        }
-
-        if (null != master) continue;
-        try {
-          this.log.error("All sentinels down, cannot determine where is " + masterName + " master is running... sleeping 1000ms, Will try again.");
-
-          Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        fetched = false;
-        this.sentinelRetry += 1;
-      }
-
-      if ((!(fetched)) && (this.sentinelRetry >= 10)) {
-        this.log.error("All sentinels down and try 10 times, Abort.");
-        throw new JedisConnectionException("Cannot connect all sentinels, Abort.");
-      }
-
-    }
-
-    if ((masters.size() != 0) && (masters.size() == shardMasters.size()))
-    {
-      label376: this.log.info("Starting Sentinel listeners...");
-      for (String sentinel : sentinels) {
-        HostAndPort hap = toHostAndPort(Arrays.asList(sentinel.split(":")));
-        MasterListener masterListener = new MasterListener(masters, hap.getHost(), hap.getPort());
-        this.masterListeners.add(masterListener);
-        masterListener.start();
-      }
-    }
-
-    return shardMasters;
-  }
+						Thread.sleep(1000L);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					fetched = false;
+					this.sentinelRetry += 1;
+				}
+			}
+			if ((!fetched) && (this.sentinelRetry >= 10)) {
+				this.log.error("All sentinels down and try 10 times, Abort.");
+				throw new JedisConnectionException("Cannot connect all sentinels, Abort.");
+			}
+		}
+		if ((masters.size() != 0) && (masters.size() == shardMasters.size())) {
+			this.log.info("Starting Sentinel listeners...");
+			for (String sentinel : sentinels) {
+				HostAndPort hap = toHostAndPort(Arrays.asList(sentinel.split(":")));
+				MasterListener masterListener = new MasterListener(masters, hap.getHost(), hap.getPort());
+				this.masterListeners.add(masterListener);
+				masterListener.start();
+			}
+		}
+		return shardMasters;
+	}
 
 	private HostAndPort toHostAndPort(List<String> getMasterAddrByNameResult) {
 		String host = (String) getMasterAddrByNameResult.get(0);
@@ -244,21 +234,21 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 			this.running = new AtomicBoolean(false);
 		}
 
-		public MasterListener(String masters, int host) {
+		public MasterListener(List<String> masters, String host) {
 			this.subscribeRetryWaitTimeMillis = 5000L;
 
 			this.running = new AtomicBoolean(false);
 
 			this.masters = masters;
 			this.host = host;
-			this.port = port;
 		}
 
-	public MasterListener(String masters, int host, long port)
-    {
-      this(???, masters, host, port);
-      this.subscribeRetryWaitTimeMillis = subscribeRetryWaitTimeMillis;
-    }
+		public MasterListener(List<String> masters, String host, int port) {
+			this.masters = masters;
+			this.host = host;
+			this.port = port;
+			this.subscribeRetryWaitTimeMillis = 5000L;
+		}
 
 		public void run() {
 			this.running.set(true);
@@ -268,8 +258,7 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 				try {
 					this.jedis.subscribe(new JedisSentinelPool.JedisPubSubAdapter() {
 						public void onMessage(String channel, String message) {
-							JedisSentinelPool.MasterListener.this.this$0.log.info("Sentinel "
-									+ JedisSentinelPool.MasterListener.this.host + ":"
+							log.info("Sentinel " + JedisSentinelPool.MasterListener.this.host + ":"
 									+ JedisSentinelPool.MasterListener.this.port + " published: " + message + ".");
 
 							String[] switchMasterMsg = message.split(" ");
@@ -277,41 +266,37 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 							if (switchMasterMsg.length > 3) {
 								int index = JedisSentinelPool.MasterListener.this.masters.indexOf(switchMasterMsg[0]);
 								if (index >= 0) {
-									HostAndPort newHostMaster = JedisSentinelPool.MasterListener.this.this$0
-											.toHostAndPort(Arrays
-													.asList(new String[] { switchMasterMsg[3], switchMasterMsg[4] }));
+									HostAndPort newHostMaster = toHostAndPort(
+											Arrays.asList(new String[] { switchMasterMsg[3], switchMasterMsg[4] }));
 									List newHostMasters = new ArrayList();
 									for (int i = 0; i < JedisSentinelPool.MasterListener.this.masters.size(); ++i) {
 										newHostMasters.add(null);
 									}
-									Collections.copy(newHostMasters,
-											JedisSentinelPool.MasterListener.this.this$0.currentHostMasters);
+									Collections.copy(newHostMasters, currentHostMasters);
 									newHostMasters.set(index, newHostMaster);
 
-									JedisSentinelPool.MasterListener.this.this$0.initPool(newHostMasters);
+									initPool(newHostMasters);
 								} else {
 									StringBuffer sb = new StringBuffer();
 									for (String masterName : JedisSentinelPool.MasterListener.this.masters) {
 										sb.append(masterName);
 										sb.append(",");
 									}
-									JedisSentinelPool.MasterListener.this.this$0.log.info(
-											"Ignoring message on +switch-master for master name " + switchMasterMsg[0]
-													+ ", our monitor master name are [" + sb + "]");
+									log.info("Ignoring message on +switch-master for master name " + switchMasterMsg[0]
+											+ ", our monitor master name are [" + sb + "]");
 								}
 
 							} else {
-								JedisSentinelPool.MasterListener.this.this$0.log
-										.error("Invalid message received on Sentinel "
-												+ JedisSentinelPool.MasterListener.this.host + ":"
-												+ JedisSentinelPool.MasterListener.this.port
-												+ " on channel +switch-master: " + message);
+								log.error("Invalid message received on Sentinel "
+										+ JedisSentinelPool.MasterListener.this.host + ":"
+										+ JedisSentinelPool.MasterListener.this.port + " on channel +switch-master: "
+										+ message);
 							}
 						}
 					}, new String[] { "+switch-master" });
 				} catch (JedisConnectionException e) {
 					if (this.running.get()) {
-						this.this$0.log.error("Lost connection to Sentinel at " + this.host + ":" + this.port
+						log.error("Lost connection to Sentinel at " + this.host + ":" + this.port
 								+ ". Sleeping 5000ms and retrying.");
 						try {
 							Thread.sleep(this.subscribeRetryWaitTimeMillis);
@@ -319,7 +304,7 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 							e1.printStackTrace();
 						}
 					} else {
-						this.this$0.log.info("Unsubscribing from Sentinel at " + this.host + ":" + this.port);
+						log.info("Unsubscribing from Sentinel at " + this.host + ":" + this.port);
 					}
 				}
 			}
@@ -327,12 +312,12 @@ public class JedisSentinelPool extends Pool<ShardedJedis> {
 
 		public void shutdown() {
 			try {
-				this.this$0.log.info("Shutting down listener on " + this.host + ":" + this.port);
+				log.info("Shutting down listener on " + this.host + ":" + this.port);
 				this.running.set(false);
 
 				this.jedis.disconnect();
 			} catch (Exception e) {
-				this.this$0.log.error("Caught exception while shutting down: " + e.getMessage());
+				log.error("Caught exception while shutting down: " + e.getMessage());
 			}
 		}
 	}

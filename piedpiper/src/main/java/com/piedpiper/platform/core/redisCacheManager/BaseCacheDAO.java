@@ -1,5 +1,4 @@
 package com.piedpiper.platform.core.redisCacheManager;
 
-public abstract interface BaseCacheDAO {}
-
-
+public abstract interface BaseCacheDAO {
+}

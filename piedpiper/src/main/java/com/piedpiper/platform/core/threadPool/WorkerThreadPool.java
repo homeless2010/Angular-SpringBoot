@@ -27,13 +27,6 @@ public class WorkerThreadPool extends ThreadPoolExecutor {
 
 	private static final BlockingQueue<Runnable> workQueue = new PriorityBlockingQueue();
 
-	public static enum Priority {
-		LOW, NORMAL, HIGH, IMMEDIATE;
-
-		private Priority() {
-		}
-	}
-
 	public WorkerThreadPool(int corePoolSize, int maximumPoolSize, long keepAliveTime) {
 		super(corePoolSize, maximumPoolSize, keepAliveTime, KEEP_ALIVE_TIME_UNIT, workQueue, createThreadFactory(),
 				createRejectedExecutionHandler());
@@ -66,7 +59,7 @@ public class WorkerThreadPool extends ThreadPoolExecutor {
 		if (threadCounter.get() % 1000L == 0L) {
 			log();
 		}
-		RunnableFuture<Object> ftask = new ComparableFutureTask(task, null, p, sequnceCounter.incrementAndGet());
+		RunnableFuture ftask = new ComparableFutureTask(task, null, p, sequnceCounter.incrementAndGet());
 		execute(ftask);
 		return ftask;
 	}
@@ -77,7 +70,7 @@ public class WorkerThreadPool extends ThreadPoolExecutor {
 		if (threadCounter.get() % 1000L == 0L) {
 			log();
 		}
-		RunnableFuture<T> ftask = new ComparableFutureTask(task, p, sequnceCounter.incrementAndGet());
+		RunnableFuture ftask = new ComparableFutureTask(task, p, sequnceCounter.incrementAndGet());
 		execute(ftask);
 		return ftask;
 	}
@@ -89,14 +82,14 @@ public class WorkerThreadPool extends ThreadPoolExecutor {
 		if (threadCounter.get() % 1000L == 0L) {
 			log();
 		}
-		RunnableFuture<T> ftask = new ComparableFutureTask(task, result, p, sequnceCounter.incrementAndGet());
+		RunnableFuture ftask = new ComparableFutureTask(task, result, p, sequnceCounter.incrementAndGet());
 		execute(ftask);
 		return ftask;
 	}
 
 	private void log() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getClass()).append("counter:").append(threadCounter.get()).append("rejected:")
+		sb.append(super.getClass()).append("counter:").append(threadCounter.get()).append("rejected:")
 				.append(rejectCounter.get());
 		sb.append("active:").append(getActiveCount()).append("Completed:").append(getCompletedTaskCount())
 				.append("taskCnt");
@@ -108,14 +101,14 @@ public class WorkerThreadPool extends ThreadPoolExecutor {
 		final WorkerThreadPool.Priority priority;
 		final long sequnce;
 
-		public ComparableFutureTask(R runnable, Callable<R> result, WorkerThreadPool.Priority priority) {
-			super(result);
+		public ComparableFutureTask(Runnable runnable, R result, Priority priority, long sequnce) {
+			super(runnable, result);
 			this.priority = priority;
 			this.sequnce = sequnce;
 		}
 
-		public ComparableFutureTask(WorkerThreadPool.Priority callable, long priority) {
-			super();
+		public ComparableFutureTask(Callable callable, Priority priority, long sequnce) {
+			super(callable);
 			this.priority = priority;
 			this.sequnce = sequnce;
 		}
@@ -124,12 +117,16 @@ public class WorkerThreadPool extends ThreadPoolExecutor {
 			if (!(o instanceof ComparableFutureTask)) {
 				throw new IllegalStateException("!instanceof PriorityLevel");
 			}
-			ComparableFutureTask<R> another = (ComparableFutureTask) o;
+			ComparableFutureTask another = (ComparableFutureTask) o;
 			int diff = another.priority.ordinal() - this.priority.ordinal();
 			if (diff != 0) {
 				return diff;
 			}
 			return (int) (this.sequnce - another.sequnce);
 		}
+	}
+
+	public static enum Priority {
+		LOW, NORMAL, HIGH, IMMEDIATE;
 	}
 }

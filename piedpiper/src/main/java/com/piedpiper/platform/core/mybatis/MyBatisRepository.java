@@ -8,12 +8,9 @@ import java.lang.annotation.Target;
 import org.springframework.stereotype.Repository;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({java.lang.annotation.ElementType.TYPE})
+@Target({ java.lang.annotation.ElementType.TYPE })
 @Documented
 @Repository
-public @interface MyBatisRepository
-{
-  String value() default "";
+public @interface MyBatisRepository {
+	String value() default "";
 }
-
-

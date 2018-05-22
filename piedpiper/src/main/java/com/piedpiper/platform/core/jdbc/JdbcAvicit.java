@@ -75,7 +75,8 @@ public class JdbcAvicit {
 							.longValue();
 			this.logger.debug("PAGE-SQL: " + sqll);
 
-			Collection<T> result = (Collection<T>) this.namedParameterJdbcOperations.query(sqll, mapSqlParam, new ResultMap());
+			Collection<T> result = (Collection<T>) this.namedParameterJdbcOperations.query(sqll, mapSqlParam,
+					new ResultMap());
 			page.setEntities(result);
 			page.setEntityCount(count);
 			return;

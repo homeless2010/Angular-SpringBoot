@@ -107,12 +107,11 @@ public class PlatformConstant {
 	public static final String MENU_NORMAL = "1";
 	public static final String MENU_PORTAL = "2";
 
-/*	public static abstract enum ExtendPermissType {
-		ex_report;
-
-		private ExtendPermissType() {
-		}
-
-		public abstract String getAppid();
-	}*/
+	/*
+	 * public static abstract enum ExtendPermissType { ex_report;
+	 * 
+	 * private ExtendPermissType() { }
+	 * 
+	 * public abstract String getAppid(); }
+	 */
 }
