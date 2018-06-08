@@ -26,7 +26,7 @@ public class ViewSQLFactory {
 				orderby = statment.substring(statment.toUpperCase().indexOf("ORDER BY"));
 			}
 			lineCount = lineCount > 0 ? lineCount
-					: jdbcTemplate.queryForInt("select count(*) as c from (" + statmentTmp + ") tmpTable");
+					: jdbcTemplate.queryForRowSet("select count(*) as c from (" + statmentTmp + ") tmpTable").getRow();
 
 			if (start + lineNumber > lineCount) {
 				return "select * from ( select ROW_NUMBER() OVER(" + orderby + ") as rownum ,"

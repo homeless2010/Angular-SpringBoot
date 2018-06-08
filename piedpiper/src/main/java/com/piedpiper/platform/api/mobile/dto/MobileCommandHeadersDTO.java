@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.Id;
 
-import org.mockito.internal.util.Platform;
+//import org.mockito.internal.util.Platform;
 
 @PojoRemark(table = "mobile_command_headers", object = "MobileCommandHeadersDTO", name = "mobile_command_headers")
 public class MobileCommandHeadersDTO extends BeanDTO implements BaseCacheBean {

@@ -1,14 +1,16 @@
 package com.piedpiper.platform.core.dao;
 
-import com.piedpiper.platform.commons.utils.PojoUtil;
-import com.piedpiper.platform.core.dao.datasource.DataSourceUtil;
-import com.piedpiper.platform.core.exception.DaoException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.piedpiper.platform.commons.utils.PojoUtil;
+import com.piedpiper.platform.core.dao.datasource.DataSourceUtil;
+import com.piedpiper.platform.core.exception.DaoException;
 
 public class PagingJDBC {
 	public static final int NUMBERS_PER_PAGE = 10;
@@ -49,7 +51,7 @@ public class PagingJDBC {
 		} else {
 			countSql = "select count(*) as c from (" + sql.toString() + ") t";
 		}
-		int lineCount = jdbcTemplate.queryForInt(countSql);
+		int lineCount = 1;
 		setTotalRows(lineCount);
 		setTotalPages();
 		setStartIndex();

@@ -1,10 +1,5 @@
 package com.piedpiper.platform.core.dao.hibernate;
 
-import com.piedpiper.platform.commons.utils.reflection.ReflectionUtils;
-import com.piedpiper.platform.core.dao.Paging;
-import com.piedpiper.platform.core.dao.PropertyFilter;
-import com.piedpiper.platform.core.dao.PropertyFilter.MatchType;
-import com.piedpiper.platform.core.exception.DaoException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
@@ -16,7 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Filter;
@@ -25,7 +20,6 @@ import org.hibernate.Query;
 import org.hibernate.ReplicationMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
@@ -35,17 +29,21 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.impl.CriteriaImpl;
-import org.hibernate.impl.CriteriaImpl.OrderEntry;
+import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.orm.hibernate5.HibernateCallback;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.orm.hibernate5.SessionFactoryUtils;
 import org.springframework.util.Assert;
+
+import com.piedpiper.platform.commons.utils.reflection.ReflectionUtils;
+import com.piedpiper.platform.core.dao.Paging;
+import com.piedpiper.platform.core.dao.PropertyFilter;
+import com.piedpiper.platform.core.exception.DaoException;
 
 public class CommonHibernateDao2 {
 	private HibernateTemplate hibernateTemplate;
@@ -174,7 +172,7 @@ public class CommonHibernateDao2 {
 	}
 
 	public List executeFind(HibernateCallback<?> action) throws DataAccessException {
-		return getHibernateTemplate().executeFind(action);
+		return (List) getHibernateTemplate().executeWithNativeSession(action);
 	}
 
 	public <T> T executeWithNativeSession(HibernateCallback<T> action) {
@@ -182,7 +180,7 @@ public class CommonHibernateDao2 {
 	}
 
 	public <T> T executeWithNewSession(HibernateCallback<T> action) {
-		return getHibernateTemplate().executeWithNewSession(action);
+		return getHibernateTemplate().executeWithNativeSession(action);
 	}
 
 	public List find(String queryString) throws DataAccessException {
@@ -391,11 +389,11 @@ public class CommonHibernateDao2 {
 	}
 
 	public boolean isAllowCreate() {
-		return getHibernateTemplate().isAllowCreate();
+		return false;
 	}
 
 	public boolean isAlwaysUseNewSession() {
-		return getHibernateTemplate().isAlwaysUseNewSession();
+		return false;
 	}
 
 	public boolean isCacheQueries() {
@@ -514,11 +512,11 @@ public class CommonHibernateDao2 {
 	}
 
 	public void setAllowCreate(boolean allowCreate) {
-		getHibernateTemplate().setAllowCreate(allowCreate);
+//		getHibernateTemplate().setAllowCreate(allowCreate);
 	}
 
 	public void setAlwaysUseNewSession(boolean alwaysUseNewSession) {
-		getHibernateTemplate().setAlwaysUseNewSession(alwaysUseNewSession);
+//		getHibernateTemplate().setAlwaysUseNewSession(alwaysUseNewSession);
 	}
 
 	public void setCacheQueries(boolean cacheQueries) {

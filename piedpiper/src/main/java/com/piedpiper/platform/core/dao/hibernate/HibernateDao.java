@@ -1,36 +1,34 @@
  package com.piedpiper.platform.core.dao.hibernate;
  
- import com.piedpiper.platform.commons.utils.reflection.ReflectionUtils;
- import com.piedpiper.platform.core.dao.Paging;
- import com.piedpiper.platform.core.dao.PropertyFilter;
- import com.piedpiper.platform.core.dao.PropertyFilter.MatchType;
- import com.piedpiper.platform.core.exception.DaoException;
  import java.io.Serializable;
- import java.sql.CallableStatement;
- import java.sql.Connection;
- import java.sql.SQLException;
- import java.util.ArrayList;
- import java.util.List;
- import java.util.Map;
- import javax.sql.DataSource;
- import org.apache.commons.lang3.StringUtils;
- import org.hibernate.Criteria;
- import org.hibernate.Query;
- import org.hibernate.SessionFactory;
- import org.hibernate.criterion.CriteriaSpecification;
- import org.hibernate.criterion.Criterion;
- import org.hibernate.criterion.Disjunction;
- import org.hibernate.criterion.MatchMode;
- import org.hibernate.criterion.Order;
- import org.hibernate.criterion.Projection;
- import org.hibernate.criterion.Projections;
- import org.hibernate.criterion.Restrictions;
- import org.hibernate.impl.CriteriaImpl;
- import org.hibernate.impl.CriteriaImpl.OrderEntry;
- import org.hibernate.transform.ResultTransformer;
- import org.slf4j.Logger;
- import org.springframework.orm.hibernate3.SessionFactoryUtils;
- import org.springframework.util.Assert;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.internal.CriteriaImpl;
+import org.hibernate.transform.ResultTransformer;
+import org.springframework.orm.hibernate5.SessionFactoryUtils;
+import org.springframework.util.Assert;
+
+import com.piedpiper.platform.commons.utils.reflection.ReflectionUtils;
+import com.piedpiper.platform.core.dao.Paging;
+import com.piedpiper.platform.core.dao.PropertyFilter;
+import com.piedpiper.platform.core.exception.DaoException;
  
  
  
